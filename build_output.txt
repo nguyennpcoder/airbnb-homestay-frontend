@@ -1,0 +1,57 @@
+  ▲ Next.js 14.2.33
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+
+Failed to compile.
+
+./app/admin/listings/[id]/edit/page.tsx
+55:8  Warning: React Hook useEffect has a missing dependency: 'fetchListingDetails'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./app/admin/listings/[id]/page.tsx
+19:8  Warning: React Hook useEffect has a missing dependency: 'fetchListing'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./app/admin/payments/page.tsx
+101:65  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+101:88  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./app/hosting/calendar/page.tsx
+40:8  Warning: React Hook useEffect has a missing dependency: 'fetchListings'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+46:8  Warning: React Hook useEffect has a missing dependency: 'fetchCalendarData'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./app/hosting/reservations/page.tsx
+35:8  Warning: React Hook useEffect has a missing dependency: 'fetchReservations'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./app/payment/page.tsx
+64:8  Warning: React Hook useEffect has a missing dependency: 'router'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+71:8  Warning: React Hook useEffect has a missing dependency: 'router'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+749:33  Error: Do not pass children as props. Instead, nest children between the opening and closing tags.  react/no-children-prop
+
+./app/product/[id]/page.tsx
+288:63  Warning: React Hook useMemo has a missing dependency: 'getMonthMatrix'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+289:65  Warning: React Hook useMemo has a missing dependency: 'getMonthMatrix'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+431:6  Warning: React Hook useMemo has a missing dependency: 'safeParseTienNghi'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+971:27  Error: Do not pass children as props. Instead, nest children between the opening and closing tags.  react/no-children-prop
+
+./app/profile/page.tsx
+92:6  Warning: React Hook useEffect has a missing dependency: 'favorites.length'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./components/GuestSelector.tsx
+58:8  Warning: React Hook useEffect has a missing dependency: 'onUpdate'. Either include it or remove the dependency array. If 'onUpdate' changes too often, find the parent component that defines it and wrap that definition in useCallback.  react-hooks/exhaustive-deps
+
+./components/Header.tsx
+173:6  Warning: React Hook useEffect has a missing dependency: 'updateIndicator'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+181:6  Warning: React Hook useEffect has a missing dependency: 'updateIndicator'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./components/MessagesPanel.tsx
+223:6  Warning: React Hook useCallback has a missing dependency: 'activeConversationId'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+239:6  Warning: React Hook useEffect has a missing dependency: 'markAsRead'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./components/PhotoGalleryLightbox.tsx
+134:6  Warning: React Hook useEffect has missing dependencies: 'goToNextImage' and 'goToPreviousImage'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+
+./components/TripsList.tsx
+46:8  Warning: React Hook useEffect has a missing dependency: 'fetchBookings'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
