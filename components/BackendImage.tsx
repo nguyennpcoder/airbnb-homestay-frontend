@@ -17,7 +17,9 @@ export default function BackendImage({
   ...props
 }: Omit<ImageProps, 'src'> & { src: unknown; fallback?: string }) {
   const resolvedSrc = getValidSrc(src, fallback);
-  const isBackendUpload = typeof resolvedSrc === 'string' && resolvedSrc.startsWith('/uploads/');
+  const isBackendUpload = typeof resolvedSrc === 'string' && (
+    resolvedSrc.startsWith('/uploads/') || resolvedSrc.includes('/uploads/')
+  );
 
   return (
     <Image

@@ -181,10 +181,7 @@ function PropertyCardComponent({
   };
 
   const processImageUrl = (imageUrl: string) => {
-    if (!imageUrl || imageUrl === 'FILE_SELECTED') return '/placeholder.jpg';
-    if (imageUrl.startsWith('http')) return imageUrl;
-    if (imageUrl.startsWith('/uploads')) return imageUrl;
-    return imageUrl;
+    return getValidSrc(imageUrl, '/placeholder.jpg');
   };
 
   const roomHref = useMemo(() => {
