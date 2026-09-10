@@ -2,6 +2,14 @@
 
 const backendUrl = process.env.BACKEND_URL || 'http://localhost:8089';
 
+if (process.env.NODE_ENV === 'production' && backendUrl.includes('localhost')) {
+  console.warn(
+    '[next.config.js] WARNING: BACKEND_URL is not set in production. ' +
+    'API rewrites will point to localhost, which fails in production. ' +
+    'Set BACKEND_URL=https://airbnb-homestay.onrender.com in your Vercel env vars.'
+  );
+}
+
 const popupSafeHeaders = [
   { key: 'Cross-Origin-Opener-Policy', value: 'same-origin-allow-popups' },
   { key: 'Cross-Origin-Embedder-Policy', value: 'unsafe-none' },

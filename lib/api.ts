@@ -27,8 +27,18 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error.response ? error.response.status : null;
-    let message = error.response?.data?.message || error.message || 'Có lỗi xảy ra';
-    const isLocked = error.response?.data?.locked === true;
+    const data = error.response?.data;
+    const backendMessage =
+      (typeof data === 'string' ? data : null) ||
+      data?.message ||
+      data?.error ||
+      data?.error_description ||
+      null;
+    let message = backendMessage || error.message || 'Có lỗi xảy ra';
+    if (status && !backendMessage) {
+      message = `[HTTP ${status}] ${message}`;
+    }
+    const isLocked = data?.locked === true;
 
     if (status === 401 || status === 403) {
       if (typeof window !== 'undefined') {
