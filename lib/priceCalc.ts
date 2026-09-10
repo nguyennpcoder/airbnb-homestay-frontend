@@ -13,6 +13,7 @@ const DEFAULT_SERVICE_FEE_RATE = 0.10; // 10% service fee (admin cấu hình tro
  * Call this once on app init.
  */
 export async function initPricingRules(): Promise<void> {
+  if (typeof window === 'undefined') return;
   try {
     const data = await pricingRulesAPI.get();
     localStorage.setItem('quyDinhGia', JSON.stringify(data));
@@ -26,6 +27,9 @@ export async function initPricingRules(): Promise<void> {
  * Nếu không có → trả về giá trị mặc định.
  */
 export function getPricingRules(): { tyLeNguoiLon: number; tyLeTreEm: number; tyLePhiDichVu: number } {
+  if (typeof window === 'undefined') {
+    return { tyLeNguoiLon: 1.0, tyLeTreEm: DEFAULT_CHILDREN_RATE, tyLePhiDichVu: DEFAULT_SERVICE_FEE_RATE };
+  }
   try {
     const raw = localStorage.getItem('quyDinhGia');
     if (raw) {

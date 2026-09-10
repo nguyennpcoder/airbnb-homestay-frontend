@@ -306,7 +306,7 @@ export default function Header() {
                             onEnded={() => setShowIntroVideo((s) => ({ ...s, [tab.key]: false }))}
                           />
                         ) : (
-                          <Image
+                          <BackendImage
                             src={tab.img}
                             alt={tab.label}
                             fill
@@ -367,7 +367,7 @@ export default function Header() {
                 </div>
                 {user?.urlAnhDaiDien ? (
                   <div className="w-8 h-8 rounded-full overflow-hidden relative border border-gray-200">
-                    <Image
+                    <BackendImage
                       src={getValidSrc(user.urlAnhDaiDien)}
                       alt={user.hoTen || 'User'}
                       fill
