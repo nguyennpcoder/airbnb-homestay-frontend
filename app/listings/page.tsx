@@ -6,11 +6,11 @@ import { useEffect, useState, useMemo, Suspense } from 'react';
 import ListingCard from '@/components/ListingCard';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
+import nextDynamic from 'next/dynamic';
 import { phongAPI, getPhongId } from '@/lib/api';
 
 // Dynamically import Map to avoid SSR issues with Leaflet
-const Map = dynamic(() => import('@/components/Map'), {
+const Map = nextDynamic(() => import('@/components/Map'), {
   ssr: false,
   loading: () => (
     <div className="h-full w-full bg-gray-100 flex items-center justify-center">
