@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic';
 import { useEffect, useMemo, useRef, useState, Suspense } from "react";
 import ReviewItem from "@/components/ReviewItem";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 import Image from "next/image";
 import PhotoGalleryLightbox from "@/components/PhotoGalleryLightbox";
 import GuestSelector, { GuestCounts } from "@/components/GuestSelector";
@@ -18,7 +18,7 @@ import ProductDetailSkeleton from "@/components/ProductDetailSkeleton";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-const ProductMap = dynamic(() => import('@/components/ProductMap'), {
+const ProductMap = nextDynamic(() => import('@/components/ProductMap'), {
   ssr: false,
   loading: () => (
     <div className="w-full h-[480px] overflow-hidden rounded-xl border bg-gray-100 flex items-center justify-center">
