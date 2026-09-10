@@ -37,6 +37,10 @@ api.interceptors.response.use(
     let message = backendMessage || error.message || 'Có lỗi xảy ra';
     if (status && !backendMessage) {
       message = `[HTTP ${status}] ${message}`;
+    } else if (status) {
+      message = `[HTTP ${status}] ${message}`;
+    } else if (error.code === 'ERR_NETWORK') {
+      message = '[NETWORK] Không kết nối được tới máy chủ. Kiểm tra BACKEND_URL trên Vercel và trạng thái backend trên Render.';
     }
     const isLocked = data?.locked === true;
 

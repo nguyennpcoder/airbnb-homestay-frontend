@@ -92,9 +92,25 @@ function LoginPageInner() {
       router.push(url);
     } catch (err: any) {
       const locked = err?.response?.data?.locked === true;
-      const msg = locked
-        ? (err?.response?.data?.message || 'Tài khoản đã bị khóa. Vui lòng liên hệ admin@airbnb.com.vn để được hỗ trợ mở lại.')
-        : (err.response?.data?.message || 'Có lỗi xảy ra. Vui lòng thử lại.');
+      const data = err?.response?.data;
+      const backendMsg =
+        (typeof data === 'string' ? data : null) ||
+        data?.message ||
+        err?.message ||
+        null;
+      const status = err?.response?.status;
+      let msg;
+      if (locked) {
+        msg = data?.message || 'Tài khoản đã bị khóa. Vui lòng liên hệ admin@airbnb.com.vn để được hỗ trợ mở lại.';
+      } else if (err?.code === 'ERR_NETWORK' || !status) {
+        msg = 'Không kết nối được tới máy chủ. Vui lòng thử lại sau vài phút (Render free tier có thể đang sleep).';
+      } else if (status >= 500) {
+        msg = `Máy chủ đang gặp sự cố (HTTP ${status}). Vui lòng thử lại sau.`;
+      } else if (backendMsg) {
+        msg = backendMsg;
+      } else {
+        msg = `[HTTP ${status}] Có lỗi xảy ra. Vui lòng thử lại.`;
+      }
       setError(msg);
     } finally {
       setLoading(false);

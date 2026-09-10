@@ -14,9 +14,21 @@ export default function HomepageCarousels() {
     const [extraCities, setExtraCities] = useState<{ city: string; count: number }[]>([]);
 
     useEffect(() => {
-        fetch('/api/public/search?loaiPhong=noi_luu_tru')
-            .then(r => r.json())
+        const apiBase = process.env.NEXT_PUBLIC_API_URL || '/api';
+        const url = `${apiBase}/public/search?loaiPhong=noi_luu_tru`;
+        fetch(url)
+            .then(async (r) => {
+                if (!r.ok) {
+                    const text = await r.text().catch(() => '');
+                    throw new Error(`[HTTP ${r.status}] ${text.slice(0, 200)}`);
+                }
+                return r.json();
+            })
             .then((data: any[]) => {
+                if (!Array.isArray(data)) {
+                    console.error('HomepageCarousels: expected array, got', typeof data, data);
+                    return;
+                }
                 const counts: Record<string, number> = {};
                 data.forEach((r: any) => {
                     const c = r.thanhPho;
@@ -31,7 +43,14 @@ export default function HomepageCarousels() {
 
                 setExtraCities(extras);
             })
-            .catch(() => {});
+            .catch((err) => {
+                console.error(
+                    'HomepageCarousels: failed to load listings from',
+                    url,
+                    '— make sure NEXT_PUBLIC_API_URL=/api and BACKEND_URL is set on Vercel. Error:',
+                    err?.message || err
+                );
+            });
     }, []);
 
     return (

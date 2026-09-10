@@ -2,12 +2,24 @@
 
 const backendUrl = process.env.BACKEND_URL || 'http://localhost:8089';
 
-if (process.env.NODE_ENV === 'production' && backendUrl.includes('localhost')) {
-  console.warn(
-    '[next.config.js] WARNING: BACKEND_URL is not set in production. ' +
-    'API rewrites will point to localhost, which fails in production. ' +
-    'Set BACKEND_URL=https://airbnb-homestay.onrender.com in your Vercel env vars.'
-  );
+if (process.env.NODE_ENV === 'production') {
+  if (!process.env.BACKEND_URL) {
+    console.error(
+      '\n[FATAL] BACKEND_URL env var is missing on Vercel.\n' +
+      'API rewrites will point to http://localhost:8089 which is unreachable in production.\n' +
+      'Fix: Vercel Dashboard → Project → Settings → Environment Variables → Production\n' +
+      '      Add: BACKEND_URL = https://airbnb-homestay.onrender.com\n' +
+      '      Then click "Redeploy".\n'
+    );
+  } else if (backendUrl.includes('localhost') || backendUrl.includes('127.0.0.1')) {
+    console.error(
+      '\n[FATAL] BACKEND_URL is set to localhost (' + backendUrl + '). ' +
+      'API rewrites will fail in production.\n' +
+      'Fix: set BACKEND_URL = https://airbnb-homestay.onrender.com in Vercel env vars.\n'
+    );
+  } else {
+    console.log('[next.config.js] BACKEND_URL = ' + backendUrl);
+  }
 }
 
 const popupSafeHeaders = [
