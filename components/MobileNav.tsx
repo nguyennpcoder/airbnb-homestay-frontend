@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useState, Suspense } from 'react';
+import api from '@/lib/api';
 
 // Icons
 const FiHome = () => (
@@ -46,9 +47,9 @@ function MobileNavContent() {
         if (!userId) return;
 
         const fetchCount = () => {
-            fetch(`/api/thong-bao/user/${userId}/counts`)
-                .then(res => res.json())
-                .then(data => {
+            api.get(`/thong-bao/user/${userId}/counts`)
+                .then(res => {
+                    const data = res.data;
                     if (data.unreadMessages !== undefined) setUnreadCount(data.unreadMessages);
                 })
                 .catch(err => console.error("Error fetching unread count", err));

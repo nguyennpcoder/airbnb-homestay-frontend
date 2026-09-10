@@ -5,6 +5,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import api from '@/lib/api';
 
 function CompleteRegistrationContent() {
   const router = useRouter();
@@ -44,24 +45,22 @@ function CompleteRegistrationContent() {
         return;
       }
       
-      const response = await fetch(`/api/auth/complete-registration?soDienThoai=${encodeURIComponent(phoneNumber)}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      const response = await api.post(
+        `/auth/complete-registration`,
+        {
           ho,
           ten,
           ngaySinh: ngaySinh || null,
           email,
           matKhau: password,
           nhanTinNhanTiepThi,
-        }),
-      });
+        },
+        { params: { soDienThoai: phoneNumber } }
+      );
 
-      const data = await response.json();
+      const data = response.data;
 
-      if (response.ok) {
+      if (data) {
         // Navigate to community commitment page
         router.push(`/community-commitment?userId=${data.maNguoiDung}&callbackUrl=${encodeURIComponent(callbackUrl)}`);
       } else {

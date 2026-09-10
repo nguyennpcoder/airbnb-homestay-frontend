@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import api from '@/lib/api';
 
 const SEPAY_LOGO = 'https://sepay.vn/assets/img/logo/sepay-820x820-blue-icon.png';
 
@@ -17,25 +18,21 @@ export default function SepayTestPage() {
         setLoading(true);
         setResult(null);
         try {
-            const res = await fetch('/api/payment/sepay/webhook', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    id: Math.floor(Math.random() * 999999),
-                    gateway: 'Vietcombank',
-                    transactionDate: new Date().toISOString().replace('T', ' ').slice(0, 19),
-                    accountNumber: '1017588888',
-                    subAccount: '',
-                    code: code.trim(),
-                    content: code.trim() + ' chuyen tien',
-                    transferType: 'in',
-                    description: 'TEST WEBHOOK chuyen tien',
-                    transferAmount: Number(amount),
-                    accumulated: 1000000,
-                    referenceCode: 'FT' + Date.now()
-                })
+            const res = await api.post('/payment/sepay/webhook', {
+                id: Math.floor(Math.random() * 999999),
+                gateway: 'Vietcombank',
+                transactionDate: new Date().toISOString().replace('T', ' ').slice(0, 19),
+                accountNumber: '1017588888',
+                subAccount: '',
+                code: code.trim(),
+                content: code.trim() + ' chuyen tien',
+                transferType: 'in',
+                description: 'TEST WEBHOOK chuyen tien',
+                transferAmount: Number(amount),
+                accumulated: 1000000,
+                referenceCode: 'FT' + Date.now()
             });
-            const data = await res.json();
+            const data = res.data;
             setResult(data);
             if (data.success) {
                 toast.success('Webhook OK — payment đã xác nhận!');

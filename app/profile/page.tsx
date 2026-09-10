@@ -8,7 +8,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import FavoritesList from '@/components/FavoritesList';
 import TripsList from '@/components/TripsList';
 import MessagesPanel from '@/components/MessagesPanel';
-import { userAPI, User, wishlistAPI, thongBaoAPI, messageAPI, paymentAPI, quyDinhAPI, QuyDinh, chinhSachHuyAPI, ChinhSachHoanTien } from '@/lib/api';
+import { userAPI, User, wishlistAPI, thongBaoAPI, messageAPI, paymentAPI, quyDinhAPI, QuyDinh, chinhSachHuyAPI, ChinhSachHoanTien, reviewsAPI } from '@/lib/api';
 import { webSocketService } from '@/lib/websocket';
 import { ProfileSkeleton } from '@/components/ProfileSkeleton';
 import WalletCard from '@/components/WalletCard';
@@ -165,8 +165,7 @@ function ProfileContent() {
     const userId = localStorage.getItem('userId');
     if (userId) {
       setLoadingReviews(true);
-      fetch(`/api/danh-gia/user/${userId}`)
-        .then(res => res.json())
+      reviewsAPI.listByUser(Number(userId))
         .then(data => {
           if (Array.isArray(data)) setUserReviews(data);
           setLoadingReviews(false);

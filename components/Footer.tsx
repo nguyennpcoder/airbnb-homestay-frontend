@@ -25,22 +25,22 @@ export default function Footer() {
             <h3 className="font-semibold text-gray-900 mb-4">Hỗ trợ</h3>
             <ul className="space-y-3 text-sm text-gray-600">
               <li>
-                <Link href="/help" className="hover:underline">
+                <Link href="/help" prefetch={false} className="hover:underline">
                   Trung tâm trợ giúp
                 </Link>
               </li>
               <li>
-                <Link href="/safety" className="hover:underline">
+                <Link href="/safety" prefetch={false} className="hover:underline">
                   Yêu cầu trợ giúp về vấn đề an toàn
                 </Link>
               </li>
               <li>
-                <Link href="/aircover" className="hover:underline">
+                <Link href="/aircover" prefetch={false} className="hover:underline">
                   AirCover
                 </Link>
               </li>
               <li>
-                <Link href="/discrimination" className="hover:underline">
+                <Link href="/discrimination" prefetch={false} className="hover:underline">
                   Chống phân biệt đối xử
                 </Link>
               </li>
@@ -52,22 +52,22 @@ export default function Footer() {
             <h3 className="font-semibold text-gray-900 mb-4">Đón tiếp khách</h3>
             <ul className="space-y-3 text-sm text-gray-600">
               <li>
-                <Link href="/host" className="hover:underline">
+                <Link href="/host" prefetch={false} className="hover:underline">
                   Cho thuê nhà trên Airbnb
                 </Link>
               </li>
               <li>
-                <Link href="/experiences/host" className="hover:underline">
+                <Link href="/experiences/host" prefetch={false} className="hover:underline">
                   Đưa trải nghiệm của bạn lên Airbnb
                 </Link>
               </li>
               <li>
-                <Link href="/services/host" className="hover:underline">
+                <Link href="/services/host" prefetch={false} className="hover:underline">
                   Đưa dịch vụ của bạn lên Airbnb
                 </Link>
               </li>
               <li>
-                <Link href="/host/resources" className="hover:underline">
+                <Link href="/host/resources" prefetch={false} className="hover:underline">
                   Tài nguyên về đón tiếp khách
                 </Link>
               </li>
@@ -79,17 +79,17 @@ export default function Footer() {
             <h3 className="font-semibold text-gray-900 mb-4">Airbnb</h3>
             <ul className="space-y-3 text-sm text-gray-600">
               <li>
-                <Link href="/newsroom" className="hover:underline">
+                <Link href="/newsroom" prefetch={false} className="hover:underline">
                   Trang tin tức
                 </Link>
               </li>
               <li>
-                <Link href="/careers" className="hover:underline">
+                <Link href="/careers" prefetch={false} className="hover:underline">
                   Cơ hội nghề nghiệp
                 </Link>
               </li>
               <li>
-                <Link href="/investors" className="hover:underline">
+                <Link href="/investors" prefetch={false} className="hover:underline">
                   Nhà đầu tư
                 </Link>
               </li>
@@ -102,10 +102,10 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="flex items-center space-x-4 text-sm text-gray-600">
               <span>© 2025 Airbnb, Inc.</span>
-              <Link href="/privacy" className="hover:underline">
+              <Link href="/privacy" prefetch={false} className="hover:underline">
                 Quyền riêng tư
               </Link>
-              <Link href="/terms" className="hover:underline">
+              <Link href="/terms" prefetch={false} className="hover:underline">
                 Điều khoản
               </Link>
             </div>

@@ -5,6 +5,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/Header';
+import api from '@/lib/api';
 
 function CommunityCommitmentContent() {
   const router = useRouter();
@@ -26,23 +27,17 @@ function CommunityCommitmentContent() {
     setError('');
 
     try {
-      const response = await fetch(`/api/auth/accept-community-commitment?userId=${userId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // After accepting, direct user to a page telling them to check email
-        router.push(`/verify-email/sent?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+      await api.post(`/auth/accept-community-commitment`, { params: { userId } });
+      router.push(`/verify-email/sent?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+    } catch (err: any) {
+      const status = err?.response?.status;
+      const data = err?.response?.data;
+      const backendMsg = (typeof data === 'string' ? data : null) || data?.message || err?.message;
+      if (err?.code === 'ERR_NETWORK' || !status) {
+        setError('Không kết nối được tới máy chủ. Vui lòng thử lại sau.');
       } else {
-        setError(data.message || 'Có lỗi xảy ra. Vui lòng thử lại.');
+        setError(backendMsg || `[HTTP ${status}] Có lỗi xảy ra. Vui lòng thử lại.`);
       }
-    } catch (err) {
-      setError('Có lỗi xảy ra. Vui lòng thử lại.');
     } finally {
       setLoading(false);
     }

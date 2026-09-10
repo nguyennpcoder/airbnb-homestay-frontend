@@ -1,8 +1,35 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
+// baseURL resolution order:
+// 1. NEXT_PUBLIC_API_URL env var (set in Vercel → e.g. "https://airbnb-homestay.onrender.com/api")
+// 2. NEXT_PUBLIC_BACKEND_URL env var (set in Vercel → e.g. "https://airbnb-homestay.onrender.com")
+// 3. Relative "/api" (works only if next.config.js rewrites are configured correctly)
+//
+// In production you MUST set NEXT_PUBLIC_API_URL or NEXT_PUBLIC_BACKEND_URL
+// to the absolute backend URL. Relative "/api" depends on the Vercel
+// rewrite, which itself requires the build-time BACKEND_URL env var to be
+// set on Vercel. Without both, requests 404 with "DNS_HOSTNAME_RESOLVED_PRIVATE".
+const rawApiUrl = process.env.NEXT_PUBLIC_API_URL;
+const rawBackendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+let resolvedBaseURL: string;
+if (rawApiUrl && /^https?:\/\//.test(rawApiUrl)) {
+  resolvedBaseURL = rawApiUrl;
+} else if (rawBackendUrl && /^https?:\/\//.test(rawBackendUrl)) {
+  resolvedBaseURL = rawBackendUrl.replace(/\/+$/, '') + '/api';
+} else {
+  resolvedBaseURL = rawApiUrl || '/api';
+  if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
+    console.error(
+      '[api.ts] No absolute backend URL configured. ' +
+      'Set NEXT_PUBLIC_API_URL=https://airbnb-homestay.onrender.com/api (or NEXT_PUBLIC_BACKEND_URL) in Vercel env vars. ' +
+      'Falling back to relative "' + resolvedBaseURL + '" which depends on next.config.js rewrites.'
+    );
+  }
+}
+
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || '/api',
+  baseURL: resolvedBaseURL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
