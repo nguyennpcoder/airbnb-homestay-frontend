@@ -607,7 +607,7 @@ export default function HostMessagesPanel({ userId, onMessageRead }: HostMessage
                   <div className="relative flex-shrink-0">
                     <div className={`w-14 h-14 rounded-full overflow-hidden border border-gray-100 shadow-sm relative ${conv.isLocked ? 'bg-gray-200' : 'bg-gray-100'}`}>
                       {conv.guestAvatar ? (
-                        <Image
+                        <BackendImage
                           src={getValidSrc(conv.guestAvatar)}
                           alt={conv.guestName}
                           fill
@@ -748,7 +748,7 @@ export default function HostMessagesPanel({ userId, onMessageRead }: HostMessage
                             {msg.fileUrl && msg.fileType === 'IMAGE' && (
                               <div className={`${msg.noiDung && !['Đã gửi file', 'Đã gửi một tệp đính kèm', 'Đã gửi một tệp đính kèm.'].includes(msg.noiDung) ? 'mb-3' : ''}`}>
                                 <div className="rounded-xl overflow-hidden border border-gray-200/20 relative max-w-sm aspect-auto min-h-[100px]">
-                                  <Image
+                                  <BackendImage
                                     src={getValidSrc(msg.fileUrl.startsWith('http') ? msg.fileUrl : `/uploads${msg.fileUrl.startsWith('/uploads') ? msg.fileUrl.substring(8) : msg.fileUrl}`)}
                                     alt="Attachment"
                                     width={400}

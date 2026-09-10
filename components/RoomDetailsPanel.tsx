@@ -89,7 +89,7 @@ export default function RoomDetailsPanel({ maPhong, fallback, title = 'Chi tiế
 
       {urlAnh && (
         <div className="rounded-2xl overflow-hidden mb-5 relative aspect-[16/10] bg-gray-100">
-          <Image
+          <BackendImage
             src={getValidSrc(urlAnh)}
             alt={tieuDe}
             fill

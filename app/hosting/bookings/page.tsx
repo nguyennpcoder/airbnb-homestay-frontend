@@ -248,7 +248,7 @@ export default function HostBookingSchedulePage() {
                                                 <div className="flex gap-2.5 min-w-0">
                                                     {b.phong?.urlAnhChinh && (
                                                         <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-gray-100 shrink-0 border border-gray-100">
-                                                            <Image
+                                                            <BackendImage
                                                                 src={getValidSrc(b.phong.urlAnhChinh)}
                                                                 alt=""
                                                                 fill

@@ -141,7 +141,7 @@ function ImageLightbox({
                     </button>
                 )}
                 <div className="relative w-full max-w-5xl h-full max-h-[calc(100vh-10rem)]">
-                    <Image
+                    <BackendImage
                         src={getValidSrc(images[index])}
                         alt={`Ảnh ${index + 1}`}
                         fill
@@ -627,7 +627,7 @@ export default function ListingDetailPage({ params }: Props) {
             </div>
 
             {lightboxIndex !== null && galleryImages.length > 0 && (
-                <ImageLightbox
+                <BackendImageLightbox
                     images={galleryImages}
                     index={lightboxIndex}
                     onClose={() => setLightboxIndex(null)}

@@ -74,7 +74,7 @@ export default function BookingDetailsPanel({ booking }: { booking: any }) {
 
       {anhPhong ? (
         <div className="rounded-2xl overflow-hidden mb-5 relative aspect-[16/10] bg-gray-100">
-          <Image
+          <BackendImage
             src={getValidSrc(anhPhong)}
             alt={tieuDe}
             fill

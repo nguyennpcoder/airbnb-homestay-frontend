@@ -515,7 +515,7 @@ function ProfileContent() {
                           >
                             {review.urlAnhPhong && (
                               <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 relative bg-gray-100">
-                                <Image
+                                <BackendImage
                                   src={getValidSrc(review.urlAnhPhong)}
                                   alt={review.tieuDePhong || 'Phòng'}
                                   fill

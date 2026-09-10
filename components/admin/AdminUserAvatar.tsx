@@ -35,7 +35,7 @@ export default function AdminUserAvatar({
     if (person?.urlAnhDaiDien) {
         return (
             <div className={boxClass} style={{ width: size, height: size }}>
-                <Image
+                <BackendImage
                     src={getValidSrc(person.urlAnhDaiDien)}
                     alt={name}
                     fill

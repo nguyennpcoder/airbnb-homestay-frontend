@@ -395,7 +395,7 @@ export default function HostReviewsPage() {
                             <div className="flex items-center gap-2">
                               <div className="w-6 h-6 rounded-full overflow-hidden relative bg-gray-200 flex-shrink-0">
                                 {review.chuNha ? (
-                                  <Image
+                                  <BackendImage
                                     src={getValidSrc(review.chuNha.avatarUrl || review.chuNha.urlAnhDaiDien) || `https://ui-avatars.com/api/?name=${encodeURIComponent(review.chuNha.hoTen || 'Host')}&background=FF385C&color=fff`}
                                     alt={review.chuNha.hoTen || 'Chủ nhà'}
                                     fill

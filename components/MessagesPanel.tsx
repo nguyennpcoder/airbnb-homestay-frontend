@@ -152,7 +152,7 @@ function HostAvatar({ avatar, name, className = '' }: { avatar?: string | null; 
   return (
     <div className={`w-full h-full flex items-center justify-center bg-gray-900 text-white font-bold text-xl uppercase overflow-hidden relative ${className}`}>
       {showImage ? (
-        <Image
+        <BackendImage
           src={src}
           alt={name || 'Avatar'}
           fill
@@ -1080,7 +1080,7 @@ export default function MessagesPanel({ userId, hostId, roomId }: MessagesPanelP
                             {msg.fileUrl && msg.fileType === 'IMAGE' && (
                               <div className={`${msg.noiDung && !['Đã gửi file', 'Đã gửi một tệp đính kèm', 'Đã gửi một tệp đính kèm.'].includes(msg.noiDung) ? 'mb-3' : ''}`}>
                                 <div className="rounded-xl overflow-hidden border border-gray-200/20 relative max-w-sm aspect-auto min-h-[100px]">
-                                  <Image
+                                  <BackendImage
                                     src={getValidSrc(msg.fileUrl.startsWith('http') ? msg.fileUrl : `/uploads${msg.fileUrl.startsWith('/uploads') ? msg.fileUrl.substring(8) : msg.fileUrl}`)}
                                     alt="Attachment"
                                     width={400}

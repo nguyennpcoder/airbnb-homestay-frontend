@@ -280,7 +280,7 @@ export default function HostAdminChatWidget() {
                         <p className="text-[13px] leading-relaxed whitespace-pre-wrap mb-2">{m.noiDung}</p>
                     )}
                     <div className="rounded-xl overflow-hidden border border-gray-200/20 relative max-w-[220px] aspect-auto min-h-[80px]">
-                        <Image
+                        <BackendImage
                             src={getValidSrc(m.fileUrl.startsWith('http') ? m.fileUrl : `/uploads${m.fileUrl.startsWith('/uploads') ? m.fileUrl.substring(8) : m.fileUrl}`)}
                             alt="Ảnh đính kèm"
                             width={400}
@@ -347,7 +347,7 @@ export default function HostAdminChatWidget() {
                         <div className="relative flex-shrink-0">
                             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#FF385C] to-[#E61E4D] flex items-center justify-center text-white text-xs font-bold shadow-sm overflow-hidden">
                                 {adminInfo?.urlAnhDaiDien ? (
-                                    <Image
+                                    <BackendImage
                                         src={getValidSrc(adminInfo.urlAnhDaiDien)}
                                         alt={adminInfo?.hoTen || 'Admin'}
                                         width={40}
@@ -430,7 +430,7 @@ export default function HostAdminChatWidget() {
                                         {!mine && (
                                             <div className="flex-shrink-0 w-7 h-7 rounded-full bg-gradient-to-br from-[#FF385C] to-[#E61E4D] flex items-center justify-center text-white text-[9px] font-bold overflow-hidden">
                                                 {adminInfo?.urlAnhDaiDien ? (
-                                                    <Image
+                                                    <BackendImage
                                                         src={getValidSrc(adminInfo.urlAnhDaiDien)}
                                                         alt=""
                                                         width={28}

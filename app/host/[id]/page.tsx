@@ -201,7 +201,7 @@ export default function HostProfilePage() {
                   {/* Left Side: Avatar & Name */}
                   <div className="flex flex-col items-center justify-center w-[60%] text-center space-y-2 pr-4">
                     <div className="relative w-28 h-28">
-                      <Image
+                      <BackendImage
                         src={getValidSrc(profile?.urlAnhDaiDien, "/uploads/@avatar/21-1762268700691.jpg")}
                         alt="host"
                         fill
@@ -369,7 +369,7 @@ export default function HostProfilePage() {
                           <div className="bg-white rounded-xl p-0 h-full">
                             <div className="flex items-center gap-4 mb-4">
                               <div className="w-12 h-12 rounded-full bg-gray-200 overflow-hidden flex-shrink-0 relative">
-                                <Image
+                                <BackendImage
                                   src={getValidSrc(review.nguoiDung?.urlAnhDaiDien, `https://ui-avatars.com/api/?name=${review.nguoiDung?.hoTen || 'User'}&background=random`)}
                                   alt={review.nguoiDung?.hoTen || 'User'}
                                   fill
@@ -470,7 +470,7 @@ export default function HostProfilePage() {
                         onClick={() => router.push(`/phong/${item.maPhong ?? item.maSanPham}`)}
                       >
                         <div className="aspect-[4/3] rounded-2xl overflow-hidden mb-3 relative">
-                          <Image
+                          <BackendImage
                             src={getValidSrc(item?.urlAnhChinh)}
                             alt="listing"
                             fill
@@ -503,7 +503,7 @@ export default function HostProfilePage() {
                           style={{ width: 'calc((100% - 48px) / 4)' }}
                         >
                           <div className="aspect-[4/3] rounded-2xl overflow-hidden mb-3 relative bg-gray-200">
-                            <Image
+                            <BackendImage
                               src={getValidSrc(`/uploads/product/product${20 + i}/1.avif`)}
                               alt="fallback listing"
                               fill
@@ -585,7 +585,7 @@ export default function HostProfilePage() {
                     onClick={() => router.push(`/phong/${item.maPhong ?? item.maSanPham}`)}
                   >
                     <div className="aspect-[4/3] rounded-xl overflow-hidden mb-3 relative bg-gray-200">
-                      <Image
+                      <BackendImage
                         src={getValidSrc(item?.urlAnhChinh)}
                         alt="listing"
                         fill

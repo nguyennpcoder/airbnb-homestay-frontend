@@ -46,7 +46,7 @@ export default function ReviewItem({ review, isModal = false, className = "mb-10
         <div id={id} className={className}>
             <div className="flex items-center gap-4 mb-4">
                 <div className="w-12 h-12 rounded-full overflow-hidden relative bg-gray-200">
-                    <Image
+                    <BackendImage
                         src={getValidSrc(avatar) || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`}
                         alt={name}
                         fill
@@ -108,7 +108,7 @@ export default function ReviewItem({ review, isModal = false, className = "mb-10
                     <div className="flex items-center gap-2 mb-2">
                         <div className="w-6 h-6 rounded-full overflow-hidden relative bg-gray-200 flex-shrink-0">
                             {review.chuNha ? (
-                                <Image
+                                <BackendImage
                                     src={getValidSrc(review.chuNha.avatarUrl || review.chuNha.urlAnhDaiDien) || `https://ui-avatars.com/api/?name=${encodeURIComponent(review.chuNha.hoTen || 'Host')}&background=FF385C&color=fff`}
                                     alt={review.chuNha.hoTen || 'Chủ nhà'}
                                     fill

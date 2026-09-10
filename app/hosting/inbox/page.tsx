@@ -318,7 +318,7 @@ export default function InboxPage() {
                                         <div className="relative flex-shrink-0">
                                             <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-white/5 overflow-hidden border border-gray-200 dark:border-[#333] group-hover:border-gray-300 dark:group-hover:border-[#444] transition-colors">
                                                 {notification.nguoiGui?.urlAnhDaiDien ? (
-                                                    <Image
+                                                    <BackendImage
                                                         src={getValidSrc(notification.nguoiGui.urlAnhDaiDien)}
                                                         alt={notification.nguoiGui.hoTen || "Guest"}
                                                         width={48}
