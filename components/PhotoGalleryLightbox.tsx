@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import BackendImage from './BackendImage';
 
 interface HinhAnh {
   maHinhAnh: number;
@@ -244,13 +244,12 @@ export default function PhotoGalleryLightbox({
             </button>
           )}
 
-          <Image
+          <BackendImage
             src={getImageUrl(currentImageViewImage.image.urlHinhAnh)}
             alt="Full view"
             fill
             className="object-contain"
             sizes="100vw"
-            priority
           />
 
           {/* Next Button */}
@@ -338,13 +337,12 @@ export default function PhotoGalleryLightbox({
                 >
                   {thumbnail && (
                     <div className="relative w-32 h-20 rounded-lg overflow-hidden flex-shrink-0 border border-gray-200 group-hover:brightness-95 transition">
-                      <Image
+                      <BackendImage
                         src={getImageUrl(thumbnail.urlHinhAnh)}
                         alt={categoryInfo.label}
                         fill
                         className="object-cover"
                         sizes="128px"
-                        draggable={false}
                       />
                     </div>
                   )}
@@ -404,7 +402,7 @@ export default function PhotoGalleryLightbox({
                             onClick={() => handleImageClick(img)}
                             className={`relative cursor-pointer group overflow-hidden rounded-sm ${isFullWidth ? 'col-span-2 aspect-[16/9]' : 'col-span-1 aspect-[3/2]'}`}
                           >
-                            <Image
+                            <BackendImage
                               src={getImageUrl(img.urlHinhAnh)}
                               alt={`${catInfo.label} ${idx + 1}`}
                               fill

@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import BackendImage from './BackendImage';
 import { wishlistAPI, getPhongId } from '@/lib/api';
+import { getValidSrc } from '@/lib/image';
 import { useRouter } from 'next/navigation';
 
 // Icon Components
