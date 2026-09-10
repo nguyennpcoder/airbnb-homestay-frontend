@@ -42,6 +42,25 @@ npm start
 - ✅ Responsive design
 - ✅ Tích hợp với Backend API
 
+## Deploy lên Render
+
+File `render.yaml` ở **root repo** định nghĩa service `airbnb-homestay-frontend`.
+
+Yêu cầu env var **build-time** (Render đọc trong quá trình build):
+
+- `BACKEND_URL` — URL backend đã deploy, ví dụ `https://airbnb-homestay.onrender.com`. Được `next.config.js` đọc để cấu hình rewrite `/api/*` → backend. Nếu đổi backend, phải **rebuild** frontend.
+- `NEXT_PUBLIC_API_URL` — `/api` (mặc định qua rewrite).
+- `NODE_VERSION=20`.
+
+Trên Render Dashboard → service → **Settings** → **Build Command**:
+```
+npm install && npm run build
+```
+**Start Command**:
+```
+npm run start
+```
+
 ## Cấu hình Social Login (Firebase Auth)
 
 Để popup Google/Facebook/GitHub hoạt động đúng, hãy đảm bảo:
