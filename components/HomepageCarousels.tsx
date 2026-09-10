@@ -14,7 +14,8 @@ export default function HomepageCarousels() {
     const [extraCities, setExtraCities] = useState<{ city: string; count: number }[]>([]);
 
     useEffect(() => {
-        const apiBase = process.env.NEXT_PUBLIC_API_URL || '/api';
+        const rawApi = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BACKEND_URL || '/api';
+        const apiBase = rawApi.replace(/\/+$/, '').replace(/\/api$/, '') + '/api';
         const url = `${apiBase}/public/search?loaiPhong=noi_luu_tru`;
         console.log('[HomepageCarousels] NEXT_PUBLIC_API_URL =', JSON.stringify(process.env.NEXT_PUBLIC_API_URL), '→ fetching', url);
         fetch(url)
