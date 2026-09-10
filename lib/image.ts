@@ -5,13 +5,17 @@ export function getValidSrc(src: unknown, fallback = '/placeholder.jpg'): string
     return fallback;
   }
 
-  // Convert absolute URLs from backend (e.g. http://localhost:8088/uploads/...)
-  // to the production backend URL so images load directly without rewrites.
+  // Absolute URL with /uploads/ (e.g. http://localhost:8089/uploads/...)
   const uploadsMatch = src.match(/^https?:\/\/[^/]+(\/uploads\/.*)$/);
   if (uploadsMatch) {
     const uploadsPath = uploadsMatch[1];
-    // If we have a backend URL, use it; otherwise return relative path
     return BACKEND_URL ? `${BACKEND_URL}${uploadsPath}` : uploadsPath;
+  }
+
+  // Relative /uploads/ path (e.g. /uploads/product/xxx.avif)
+  // Prepend backend URL so browser fetches directly, not via Next.js Image Optimization
+  if (src.startsWith('/uploads/')) {
+    return BACKEND_URL ? `${BACKEND_URL}${src}` : src;
   }
 
   return src;
