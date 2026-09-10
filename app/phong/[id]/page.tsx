@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = 'force-dynamic';
 
 import { useEffect, useMemo, useRef, useState, Suspense } from "react";
 import ReviewItem from "@/components/ReviewItem";
