@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Image from 'next/image';
+import BackendImage from '@/components/BackendImage';
 import { format } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import { Review, reviewsAPI } from '@/lib/api';

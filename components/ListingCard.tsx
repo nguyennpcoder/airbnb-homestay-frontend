@@ -1,9 +1,8 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
-import { getValidSrc } from '@/lib/image';
+import BackendImage from './BackendImage';
 import { wishlistAPI, getPhongId } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 
@@ -91,7 +90,7 @@ const HostAvatar = ({ hostData }: { hostData: NonNullable<PropertyCardData['host
     >
       <div className="relative w-12 h-12 transition-transform hover:scale-105 duration-200">
         <div className="w-full h-full rounded-full overflow-hidden border-2 border-white shadow-md">
-          <Image
+          <BackendImage
             src={safeAvatarUrl}
             alt={hoTen}
             width={48}
@@ -215,7 +214,7 @@ function PropertyCardComponent({
             >
               {imageGallery.map((imgUrl, imgPosition) => (
                 <div key={imgPosition} className="relative w-full h-full flex-shrink-0">
-                  <Image
+                  <BackendImage
                     src={processImageUrl(imgUrl)}
                     alt={`${item.tieuDe} - Ảnh ${imgPosition + 1}`}
                     fill

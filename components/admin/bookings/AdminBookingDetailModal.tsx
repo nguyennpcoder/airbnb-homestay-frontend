@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import BackendImage from '@/components/BackendImage';
 import Link from 'next/link';
 import { AdminModalShell } from '@/components/admin/AdminModal';
 import { getValidSrc } from '@/lib/image';
@@ -130,7 +130,7 @@ export default function AdminBookingDetailModal({ booking, onClose }: Props) {
                     <div className="flex gap-3 py-3 border-b border-gray-100">
                         {booking.phong?.urlAnhChinh && (
                             <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-gray-100 shrink-0">
-                                <Image src={getValidSrc(booking.phong.urlAnhChinh)} alt="" fill className="object-cover" sizes="64px" />
+                                <BackendImage src={getValidSrc(booking.phong.urlAnhChinh)} alt="" fill className="object-cover" sizes="64px" />
                             </div>
                         )}
                         <div className="min-w-0 flex-1">

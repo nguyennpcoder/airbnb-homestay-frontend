@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { messageAPI, Message } from '@/lib/api';
 import { webSocketService } from '@/lib/websocket';
-import Image from 'next/image';
+import BackendImage from '@/components/BackendImage';
 import { getValidSrc } from '@/lib/image';
 import { FiPaperclip, FiSmile, FiImage, FiX } from 'react-icons/fi';
 import dynamic from 'next/dynamic';

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
+import BackendImage from '@/components/BackendImage';
 import Link from 'next/link';
 import { phongAPI, Phong, getPhongId } from '@/lib/api';
 import { getValidSrc } from '@/lib/image';

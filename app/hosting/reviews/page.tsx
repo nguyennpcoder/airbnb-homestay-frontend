@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { reviewsAPI, hostAPI, Review, Phong, getPhongId } from '@/lib/api';
-import Image from 'next/image';
+import BackendImage from '@/components/BackendImage';
 import { format } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import toast from 'react-hot-toast';

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
+import BackendImage from '@/components/BackendImage';
 import { getValidSrc } from '@/lib/image';
 import { AdminModalShell } from '@/components/admin/AdminModal';
 
@@ -61,7 +61,7 @@ export default function ConnectionRequestModal({
                         <div className="relative shrink-0">
                             <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-white/5 overflow-hidden border border-gray-200 dark:border-[#333]">
                                 {notification.nguoiGui?.urlAnhDaiDien ? (
-                                    <Image src={getValidSrc(notification.nguoiGui.urlAnhDaiDien)} alt="" fill className="object-cover" sizes="48px" />
+                                    <BackendImage src={getValidSrc(notification.nguoiGui.urlAnhDaiDien)} alt="" fill className="object-cover" sizes="48px" />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center bg-gray-900 dark:bg-gray-800 text-white text-lg font-bold">
                                         {notification.nguoiGui?.hoTen?.charAt(0)?.toUpperCase() || '?'}
@@ -104,7 +104,7 @@ export default function ConnectionRequestModal({
                                 <div className="flex gap-3 p-4">
                                     {notification.datCho.phong?.urlAnhChinh && (
                                         <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 relative flex-shrink-0">
-                                            <Image src={getValidSrc(notification.datCho.phong.urlAnhChinh)} alt="" fill className="object-cover" sizes="80px" />
+                                            <BackendImage src={getValidSrc(notification.datCho.phong.urlAnhChinh)} alt="" fill className="object-cover" sizes="80px" />
                                         </div>
                                     )}
                                     <div className="flex-1 min-w-0">

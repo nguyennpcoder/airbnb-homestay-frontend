@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { paymentAPI, bookingAPI, userAPI, Booking, promotionAPI, KhuyenMai, pricingRulesAPI, chinhSachHuyAPI } from '@/lib/api';
 import { calculateLuuTru, formatVND, getPricingRules } from '@/lib/priceCalc';
 import GuestSelector from '@/components/GuestSelector';
-import Image from 'next/image';
+import BackendImage from '@/components/BackendImage';
 import ConfirmModal from '@/components/ConfirmModal';
 import toast from 'react-hot-toast';
 import { getValidSrc } from '@/lib/image';
@@ -503,7 +503,7 @@ function PaymentPageContent() {
                                         >
                                             <div className="flex items-center gap-4">
                                                 <div className="w-10 h-10 relative flex-shrink-0">
-                                                    <Image src={method.icon} alt={method.label} fill className="object-contain" />
+                                                    <BackendImage src={method.icon} alt={method.label} fill className="object-contain" />
                                                 </div>
                                                 <span className="font-semibold text-gray-900 text-base">{method.label}</span>
                                             </div>
@@ -552,7 +552,7 @@ function PaymentPageContent() {
                             <div className="border border-gray-200 rounded-xl p-6 shadow-sm bg-white">
                                 <div className="flex gap-4 mb-6">
                                     <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 bg-gray-200 relative">
-                                        <Image src={getValidSrc(phongData?.urlAnhChinh || '') || '/placeholder-house.jpg'} alt="Listing" fill className="object-cover" />
+                                        <BackendImage src={getValidSrc(phongData?.urlAnhChinh || '') || '/placeholder-house.jpg'} alt="Listing" fill className="object-cover" />
                                     </div>
                                     <div className="flex flex-col justify-center">
                                         <div className="text-[12px] text-gray-500 mb-0.5">Toàn bộ căn hộ cho thuê</div>

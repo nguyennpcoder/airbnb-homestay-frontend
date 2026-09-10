@@ -6,7 +6,7 @@ import { Phong, ListingImage, Review } from '@/lib/api';
 import dynamic from 'next/dynamic';
 import ReviewItem from '@/components/ReviewItem';
 import { createPortal } from 'react-dom';
-
+import BackendImage from '@/components/BackendImage';
 const ProductMap = dynamic(() => import('@/components/ProductMap'), {
     ssr: false,
     loading: () => <div className="w-full h-96 bg-gray-100 animate-pulse rounded-xl" />
@@ -65,7 +65,7 @@ function ImageLightbox({ images, index, onClose, onChange }: {
                     </button>
                 )}
                 <div className="relative w-full max-w-5xl h-full max-h-[calc(100vh-10rem)]">
-                    <Image src={images[index]} alt={`Ảnh ${index + 1}`} fill className="object-contain" sizes="100vw" priority />
+                    <BackendImage src={images[index]} alt={`Ảnh ${index + 1}`} fill className="object-contain" sizes="100vw" priority />
                 </div>
                 {total > 1 && (
                     <button type="button" onClick={goNext} className="absolute right-3 md:right-6 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors z-10">
@@ -79,7 +79,7 @@ function ImageLightbox({ images, index, onClose, onChange }: {
                         {images.map((url, i) => (
                             <button key={i} type="button" onClick={() => onChange(i)}
                                 className={`relative w-16 h-12 rounded-lg overflow-hidden shrink-0 border-2 transition-all ${i === index ? 'border-white scale-105' : 'border-transparent opacity-60 hover:opacity-100'}`}>
-                                <Image src={url} alt="" fill className="object-cover" sizes="64px" />
+                                <BackendImage src={url} alt="" fill className="object-cover" sizes="64px" />
                             </button>
                         ))}
                     </div>
@@ -192,7 +192,7 @@ export default function HostListingView({ product, reviews = [], onEdit }: HostL
                         className={`md:col-span-2 md:row-span-2 relative bg-gray-100 group cursor-pointer ${product.biKhoa ? 'grayscale' : ''}`} disabled={!mainImage}>
                         {mainImage ? (
                             <>
-                                <Image src={mainImage} alt={product.tieuDe || 'Listing'} fill className="object-cover" sizes="50vw" priority />
+                                <BackendImage src={mainImage} alt={product.tieuDe || 'Listing'} fill className="object-cover" sizes="50vw" priority />
                                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
                                     <span className="px-3 py-1.5 bg-white/90 rounded-lg text-xs font-bold text-gray-900 shadow">Xem ảnh</span>
                                 </div>
@@ -211,7 +211,7 @@ export default function HostListingView({ product, reviews = [], onEdit }: HostL
                             disabled={!secondaryImages[i]}
                             className={`hidden md:block relative bg-gray-100 group cursor-pointer ${product.biKhoa ? 'grayscale' : ''} ${!secondaryImages[i] ? 'cursor-default' : ''}`}>
                             {secondaryImages[i] ? (
-                                <Image src={secondaryImages[i]} alt="" fill className="object-cover" sizes="25vw" />
+                                <BackendImage src={secondaryImages[i]} alt="" fill className="object-cover" sizes="25vw" />
                             ) : null}
                         </button>
                     ))}

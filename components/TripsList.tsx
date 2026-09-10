@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
+import BackendImage from '@/components/BackendImage';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Modal } from 'antd';
@@ -242,7 +242,7 @@ export default function TripsList({ userId }: TripsListProps) {
                                 className="flex flex-col md:flex-row border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition bg-white">
                                 <div className="relative h-40 md:h-auto md:w-56 flex-shrink-0 bg-gray-100">
                                     {b.phong?.urlAnhChinh ? (
-                                        <Image src={getValidSrc(b.phong.urlAnhChinh)} alt="" fill className="object-cover" />
+                                        <BackendImage src={getValidSrc(b.phong.urlAnhChinh)} alt="" fill className="object-cover" />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center text-gray-400 text-2xl">🏠</div>
                                     )}

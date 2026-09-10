@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import BackendImage from '@/components/BackendImage';
 import { getValidSrc } from '@/lib/image';
 
 export interface AdminAvatarPerson {

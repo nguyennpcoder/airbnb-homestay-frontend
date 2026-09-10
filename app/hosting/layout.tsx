@@ -7,7 +7,7 @@ import { hostAPI, userAPI, thongBaoAPI, messageAPI } from '@/lib/api';
 import Image from 'next/image';
 import { AdminThemeProvider, useAdminTheme, type AdminThemeMode } from '@/context/AdminThemeContext';
 import HostAdminChatWidget from '@/components/HostAdminChatWidget';
-
+import BackendImage from '@/components/BackendImage';
 function HostingContent({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const pathname = usePathname();
@@ -211,7 +211,7 @@ function HostingContent({ children }: { children: React.ReactNode }) {
                                 className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden border border-gray-200 dark:border-gray-600 hover:shadow-md transition-all relative"
                             >
                                 {userAvatar ? (
-                                    <Image src={userAvatar} alt="Host avatar" fill className="object-cover" sizes="40px" />
+                                    <BackendImage src={userAvatar} alt="Host avatar" fill className="object-cover" sizes="40px" />
                                 ) : (
                                     <div className="w-full h-full bg-gray-900 text-white flex items-center justify-center">
                                         <span className="text-sm font-medium">H</span>

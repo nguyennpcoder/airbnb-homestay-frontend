@@ -5,7 +5,7 @@ import { bookingAPI, messageAPI, quickReplyAPI, hostAPI, Message, QuickReply } f
 import { FiFilter, FiSettings, FiSearch, FiMoreHorizontal, FiZap, FiPlus, FiTrash2, FiImage, FiSmile, FiX, FiPaperclip } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
+import BackendImage from '@/components/BackendImage';
 import RoomDetailsPanel from '@/components/RoomDetailsPanel';
 import { getValidSrc } from '@/lib/image';
 import EmptyState from './EmptyState';
@@ -674,7 +674,7 @@ export default function HostMessagesPanel({ userId, onMessageRead }: HostMessage
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" /></svg>
                 </button>
                 <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 relative border border-gray-100 shadow-sm">
-                  <Image src={getValidSrc(activeConversation.guestAvatar, '/placeholder-user.jpg')} alt="Guest" fill className="object-cover" sizes="48px" />
+                  <BackendImage src={getValidSrc(activeConversation.guestAvatar, '/placeholder-user.jpg')} alt="Guest" fill className="object-cover" sizes="48px" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">

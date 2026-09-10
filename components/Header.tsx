@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import Image from 'next/image';
+import BackendImage from '@/components/BackendImage';
 import Link from 'next/link';
 import SearchBar from './SearchBar';
 import HostRequestModal from './HostRequestModal';

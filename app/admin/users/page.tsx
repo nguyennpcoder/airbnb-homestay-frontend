@@ -8,7 +8,7 @@ import { adminAPI, thongBaoAPI, User } from '@/lib/api';
 import toast from 'react-hot-toast';
 import Pagination from '@/components/Pagination';
 import ConfirmModal from '@/components/ConfirmModal';
-import Image from 'next/image';
+import BackendImage from '@/components/BackendImage';
 import { getValidSrc } from '@/lib/image';
 import AdminPhoneLink from '@/components/admin/AdminPhoneLink';
 
@@ -83,7 +83,7 @@ function UserAvatar({ user, size = 40 }: { user: User; size?: number }) {
     if (user.urlAnhDaiDien) {
         return (
             <div className={cls} style={style}>
-                <Image src={getValidSrc(user.urlAnhDaiDien)} alt={user.hoTen || 'User'} fill className="object-cover" sizes={`${size}px`} />
+                <BackendImage src={getValidSrc(user.urlAnhDaiDien)} alt={user.hoTen || 'User'} fill className="object-cover" sizes={`${size}px`} />
             </div>
         );
     }

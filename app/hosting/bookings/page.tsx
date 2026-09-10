@@ -9,7 +9,7 @@ import Pagination from '@/components/Pagination';
 import toast from 'react-hot-toast';
 import HostAvailabilityCalendar from '@/components/admin/bookings/HostAvailabilityCalendar';
 import AdminBookingDetailModal from '@/components/admin/bookings/AdminBookingDetailModal';
-import Image from 'next/image';
+import BackendImage from '@/components/BackendImage';
 import AdminUserAvatar, { resolvePersonName } from '@/components/admin/AdminUserAvatar';
 import { VerifiedName } from '@/components/admin/VerifiedBadge';
 import { getValidSrc } from '@/lib/image';

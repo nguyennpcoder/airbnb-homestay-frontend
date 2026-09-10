@@ -5,7 +5,7 @@ import { useEffect, useRef, useState, type RefObject } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { hostAPI, reviewsAPI, Review } from "@/lib/api";
 import { getValidSrc } from "@/lib/image";
-import Image from "next/image";
+import BackendImage from '@/components/BackendImage';
 import Header from "@/components/Header";
 import { TrophyOutlined } from "@ant-design/icons";
 

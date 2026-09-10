@@ -6,7 +6,7 @@ import HostMessagesPanel from '@/components/HostMessagesPanel';
 import toast from 'react-hot-toast';
 import { webSocketService } from '@/lib/websocket';
 import { thongBaoAPI, messageAPI, ThongBao, Message } from '@/lib/api';
-import Image from 'next/image';
+import BackendImage from '@/components/BackendImage';
 import { getValidSrc } from '@/lib/image';
 
 interface ThongBaoWithDatCho extends ThongBao {

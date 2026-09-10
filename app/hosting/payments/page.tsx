@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { hostAPI } from '@/lib/api';
 import Pagination from '@/components/Pagination';
-import Image from 'next/image';
+import BackendImage from '@/components/BackendImage';
 import { getValidSrc } from '@/lib/image';
 import AdminUserAvatar from '@/components/admin/AdminUserAvatar';
 import { VerifiedName } from '@/components/admin/VerifiedBadge';
@@ -410,7 +410,7 @@ export default function HostPaymentManagementPage() {
                                                     <div className="flex items-center gap-3">
                                                         <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-gray-100 shrink-0 border border-gray-200">
                                                             {payment.listingImageUrl ? (
-                                                                <Image src={getValidSrc(payment.listingImageUrl)} alt={payment.listingTitle || ''} fill className="object-cover" />
+                                                                <BackendImage src={getValidSrc(payment.listingImageUrl)} alt={payment.listingTitle || ''} fill className="object-cover" />
                                                             ) : (
                                                                 <div className="w-full h-full flex items-center justify-center">
                                                                     <svg className="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -590,7 +590,7 @@ export default function HostPaymentManagementPage() {
                                     <div className="flex items-center gap-3">
                                         <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-100 shrink-0 border border-gray-200">
                                             {payment.listingImageUrl ? (
-                                                <Image src={getValidSrc(payment.listingImageUrl)} alt={payment.listingTitle || ''} fill className="object-cover" />
+                                                <BackendImage src={getValidSrc(payment.listingImageUrl)} alt={payment.listingTitle || ''} fill className="object-cover" />
                                             ) : (
                                                 <div className="w-full h-full flex items-center justify-center">
                                                     <svg className="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">

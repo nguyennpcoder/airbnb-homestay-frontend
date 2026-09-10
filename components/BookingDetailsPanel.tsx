@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import BackendImage from '@/components/BackendImage';
 import Link from 'next/link';
 import { getValidSrc } from '@/lib/image';
 import { getServiceFeeRate } from '@/lib/priceCalc';

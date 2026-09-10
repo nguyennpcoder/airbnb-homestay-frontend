@@ -3,7 +3,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 import { userAPI, thongBaoAPI, messageAPI } from '@/lib/api';
 import { webSocketService } from '@/lib/websocket';
-import Image from 'next/image';
+import BackendImage from '@/components/BackendImage';
 import Link from 'next/link';
 import { getValidSrc } from '@/lib/image';
 import { AdminThemeProvider } from '@/context/AdminThemeContext';
@@ -235,7 +235,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden border border-gray-200 dark:border-gray-600 hover:shadow-md transition-all relative"
               >
                 {userAvatar ? (
-                  <Image src={getValidSrc(userAvatar)} alt="Admin avatar" fill className="object-cover" sizes="40px" />
+                  <BackendImage src={getValidSrc(userAvatar)} alt="Admin avatar" fill className="object-cover" sizes="40px" />
                 ) : (
                   <div className="w-full h-full bg-gray-900 text-white flex items-center justify-center">
                     <span className="text-sm font-medium">A</span>

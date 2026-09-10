@@ -20,7 +20,7 @@ import toast from 'react-hot-toast';
 import { hostAPI, availabilityAPI, Phong, Booking, getPhongId } from '@/lib/api';
 import AdminBookingDetailModal from './AdminBookingDetailModal';
 import { getStatusMeta } from './booking-utils';
-
+import BackendImage from '@/components/BackendImage';
 interface DayInfo {
     ngay: string;
     conKhaDung: boolean;
@@ -287,9 +287,9 @@ export default function HostAvailabilityCalendar({
                                     >
                                         <div className="w-9 h-9 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 relative">
                                             {l.urlAnhChinh && l.urlAnhChinh !== 'FILE_SELECTED' ? (
-                                                <Image src={l.urlAnhChinh} fill className="object-cover" alt="" sizes="36px" />
+                                                <BackendImage src={l.urlAnhChinh} fill className="object-cover" alt="" sizes="36px" />
                                             ) : l.hinhAnhs && l.hinhAnhs.length > 0 ? (
-                                                <Image src={l.hinhAnhs[0].urlHinhAnh} fill className="object-cover" alt="" sizes="36px" />
+                                                <BackendImage src={l.hinhAnhs[0].urlHinhAnh} fill className="object-cover" alt="" sizes="36px" />
                                             ) : (
                                                 <div className="w-full h-full flex items-center justify-center text-gray-300">
                                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

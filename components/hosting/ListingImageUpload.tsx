@@ -6,7 +6,7 @@ import { PlusOutlined, DeleteOutlined, StarOutlined, StarFilled, InboxOutlined }
 import type { UploadFile, UploadProps } from 'antd';
 import { hostAPI, ListingImage } from '@/lib/api';
 import Image from 'next/image';
-
+import BackendImage from '@/components/BackendImage';
 interface ListingImageUploadProps {
     listingId: number;
     initialImages?: ListingImage[];
@@ -176,7 +176,7 @@ export default function ListingImageUpload({ listingId, initialImages = [], onCh
                 className="image-preview-modal"
             >
                 <div className="relative aspect-video w-full rounded-xl overflow-hidden mt-4">
-                    <Image src={previewImage} alt="Preview" fill className="object-contain" />
+                    <BackendImage src={previewImage} alt="Preview" fill className="object-contain" />
                 </div>
             </Modal>
         </div>

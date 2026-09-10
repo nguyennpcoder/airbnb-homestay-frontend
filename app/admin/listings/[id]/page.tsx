@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { adminAPI } from '@/lib/api';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
-import Image from 'next/image';
+import BackendImage from '@/components/BackendImage';
 import ConfirmModal from '@/components/ConfirmModal';
 import { getValidSrc } from '@/lib/image';
 import VerifiedBadge from '@/components/admin/VerifiedBadge';
@@ -174,7 +174,7 @@ function ImageLightbox({
                                 onClick={() => onChange(i)}
                                 className={`relative w-16 h-12 rounded-lg overflow-hidden shrink-0 border-2 transition-all ${i === index ? 'border-white scale-105' : 'border-transparent opacity-60 hover:opacity-100'}`}
                             >
-                                <Image src={getValidSrc(url)} alt="" fill className="object-cover" sizes="64px" />
+                                <BackendImage src={getValidSrc(url)} alt="" fill className="object-cover" sizes="64px" />
                             </button>
                         ))}
                     </div>
@@ -420,7 +420,7 @@ export default function ListingDetailPage({ params }: Props) {
                     >
                         {mainImage ? (
                             <>
-                                <Image src={getValidSrc(mainImage)} alt={listing.tieuDe || 'Listing'} fill className="object-cover" sizes="50vw" priority />
+                                <BackendImage src={getValidSrc(mainImage)} alt={listing.tieuDe || 'Listing'} fill className="object-cover" sizes="50vw" priority />
                                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
                                     <span className="px-3 py-1.5 bg-white/90 rounded-lg text-xs font-bold text-gray-900 shadow">Xem ảnh</span>
                                 </div>
@@ -444,7 +444,7 @@ export default function ListingDetailPage({ params }: Props) {
                         >
                             {secondaryImages[i] ? (
                                 <>
-                                    <Image src={getValidSrc(secondaryImages[i])} alt="" fill className="object-cover" sizes="25vw" />
+                                    <BackendImage src={getValidSrc(secondaryImages[i])} alt="" fill className="object-cover" sizes="25vw" />
                                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
                                 </>
                             ) : null}
@@ -564,7 +564,7 @@ export default function ListingDetailPage({ params }: Props) {
                                     <div className="flex items-center gap-3">
                                         <div className="relative w-12 h-12 rounded-full overflow-hidden bg-gray-200 shrink-0 border border-gray-100">
                                             {listing.hostInfo.avatarUrl ? (
-                                                <Image src={getValidSrc(listing.hostInfo.avatarUrl)} alt={listing.hostInfo.hoTen || 'Host'} fill className="object-cover" sizes="48px" />
+                                                <BackendImage src={getValidSrc(listing.hostInfo.avatarUrl)} alt={listing.hostInfo.hoTen || 'Host'} fill className="object-cover" sizes="48px" />
                                             ) : (
                                                 <div className="w-full h-full flex items-center justify-center text-sm font-bold text-gray-500">
                                                     {(listing.hostInfo.hoTen || 'H').charAt(0).toUpperCase()}

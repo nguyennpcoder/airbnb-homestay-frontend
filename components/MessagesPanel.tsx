@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { bookingAPI, messageAPI, phongAPI, userAPI, Message } from '@/lib/api';
-import Image from 'next/image';
+import BackendImage from '@/components/BackendImage';
 import { webSocketService } from '@/lib/websocket';
 import { FiFilter, FiSettings, FiSearch, FiMoreHorizontal, FiPaperclip, FiSmile, FiImage, FiX } from 'react-icons/fi';
 import toast from 'react-hot-toast';
