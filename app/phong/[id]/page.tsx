@@ -5,7 +5,8 @@ import { useEffect, useMemo, useRef, useState, Suspense } from "react";
 import ReviewItem from "@/components/ReviewItem";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import nextDynamic from "next/dynamic";
-import Image from "next/image";
+import BackendImage from "@/components/BackendImage";
+import { getValidSrc } from "@/lib/image";
 import PhotoGalleryLightbox from "@/components/PhotoGalleryLightbox";
 import GuestSelector, { GuestCounts } from "@/components/GuestSelector";
 import { phongAPI, wishlistAPI, bookingAPI, availabilityAPI, reviewsAPI, pricingRulesAPI, chinhSachHuyAPI, Review, Phong, ListingImage } from "@/lib/api";
@@ -149,6 +150,7 @@ export default function ProductDetailsPage() {
   const id = Number(params.id);
   const [product, setProduct] = useState<Phong | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [liked, setLiked] = useState<boolean>(false);
   // Guest breakdown state
   const [adults, setAdults] = useState<number>(1);
@@ -239,8 +241,9 @@ export default function ProductDetailsPage() {
         if (uid && Array.isArray(wishlistRes)) {
           setLiked(wishlistRes.some((p: any) => Number(p?.maPhong ?? p?.maSanPham) === id));
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error fetching product details:', error);
+        setLoadError(error?.message || 'Không thể tải thông tin phòng. Vui lòng thử lại.');
       } finally {
         setLoading(false);
       }
@@ -252,9 +255,10 @@ export default function ProductDetailsPage() {
   // Fetch pricing rules from API (avoid localStorage race condition)
   useEffect(() => {
     pricingRulesAPI.get().then(data => {
-      const rules = { tyLeNguoiLon: data.tyLeNguoiLon / 100, tyLeTreEm: data.tyLeTreEm / 100, tyLePhiDichVu: (data.tyLePhiDichVu ?? 10) / 100 };
+      if (!data) return;
+      const rules = { tyLeNguoiLon: (data?.tyLeNguoiLon ?? 100) / 100, tyLeTreEm: (data?.tyLeTreEm ?? 60) / 100, tyLePhiDichVu: (data?.tyLePhiDichVu ?? 10) / 100 };
       setPricingRules(rules);
-      localStorage.setItem('quyDinhGia', JSON.stringify(data));
+      try { localStorage.setItem('quyDinhGia', JSON.stringify(data)); } catch {}
     }).catch(() => {});
     chinhSachHuyAPI.list().then(setCancellationPolicies).catch(() => {});
   }, []);
@@ -733,6 +737,34 @@ export default function ProductDetailsPage() {
     );
   }
 
+  if (!product || loadError) {
+    return (
+      <>
+        <Header />
+        <div className="min-h-screen flex flex-col items-center justify-center gap-4 px-4">
+          <svg className="w-16 h-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <h2 className="text-xl font-semibold text-gray-700">Không tìm thấy phòng</h2>
+          <p className="text-gray-500 text-center max-w-md">{loadError || 'Phòng này không tồn tại hoặc đã bị xóa.'}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-2 px-6 py-2.5 bg-[#FF385C] text-white rounded-lg font-semibold hover:bg-[#D90B3E] transition"
+          >
+            Thử lại
+          </button>
+          <button
+            onClick={() => router.push('/')}
+            className="px-6 py-2.5 border border-gray-300 rounded-lg font-semibold hover:bg-gray-50 transition"
+          >
+            Về trang chủ
+          </button>
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white">
       <div className="pt-0 md:pt-20 pb-24 md:pb-12">
@@ -740,12 +772,21 @@ export default function ProductDetailsPage() {
           <div className="flex items-center justify-between mb-3">
             <h1 className="text-2xl font-semibold text-gray-900">{product?.tieuDe || "Chi tiết chỗ ở"}</h1>
             <div className="flex gap-4 text-sm text-gray-700">
-              <button onClick={() => {
-                  if (navigator.share) {
-                    navigator.share({ title: product?.tieuDe, url: window.location.href });
-                  } else {
-                    navigator.clipboard.writeText(window.location.href);
-                    toast.success('Đã sao chép liên kết');
+              <button onClick={async () => {
+                  try {
+                    if (navigator.share) {
+                      await navigator.share({ title: product.tieuDe, url: window.location.href });
+                    } else {
+                      await navigator.clipboard.writeText(window.location.href);
+                      toast.success('Đã sao chép liên kết');
+                    }
+                  } catch (e: any) {
+                    if (e?.name !== 'AbortError') {
+                      try {
+                        await navigator.clipboard.writeText(window.location.href);
+                        toast.success('Đã sao chép liên kết');
+                      } catch {}
+                    }
                   }
                 }} className="hover:text-gray-900 flex items-center gap-1.5">
                 <svg viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4">
@@ -784,7 +825,7 @@ export default function ProductDetailsPage() {
                         setShowGallery(true);
                       }}
                     >
-                      <Image
+                      <BackendImage
                         src={img.urlHinhAnh}
                         alt={`img-${idx}`}
                         fill
@@ -811,7 +852,7 @@ export default function ProductDetailsPage() {
                 >
                   {main && (
                     <>
-                      <Image
+                      <BackendImage
                         src={main.urlHinhAnh}
                         alt="main"
                         fill
@@ -834,7 +875,7 @@ export default function ProductDetailsPage() {
                       setShowGallery(true);
                     }}
                   >
-                    <Image
+                    <BackendImage
                       src={img.urlHinhAnh}
                       alt={`thumb-${idx}`}
                       fill
@@ -901,7 +942,7 @@ export default function ProductDetailsPage() {
                 <div className="mb-6">
                   <div className="flex items-center gap-3 mb-3 cursor-pointer" onClick={() => { saveBookingDraft(); router.push(`/host/${product?.hostInfo?.maNguoiDung}?roomId=${id}`); }}>
                     <div className="w-12 h-12 rounded-full overflow-hidden relative border border-gray-100 shadow-sm bg-gray-100">
-                      <Image
+                      <BackendImage
                         src={product?.hostInfo?.avatarUrl || "/placeholder-avatar.jpg"}
                         alt="host"
                         fill
@@ -972,7 +1013,7 @@ export default function ProductDetailsPage() {
                           }}
                         >
                           <div className="relative w-full h-64 bg-gray-100">
-                            <Image
+                            <BackendImage
                               src={livingImg.urlHinhAnh}
                               alt="Phòng khách"
                               fill
@@ -995,7 +1036,7 @@ export default function ProductDetailsPage() {
                           }}
                         >
                           <div className="relative w-full h-64 bg-gray-100">
-                            <Image
+                            <BackendImage
                               src={bedroomImg.urlHinhAnh}
                               alt="Phòng ngủ"
                               fill
@@ -1428,7 +1469,7 @@ export default function ProductDetailsPage() {
                   <div className="flex flex-col items-center text-center mb-12">
                     <div className="relative inline-block mb-2">
                       <div className="flex items-center justify-center">
-                        <Image
+                        <BackendImage
                           src="/rating1.avif"
                           alt="Guest Favorite Left"
                           height={80}
@@ -1438,7 +1479,7 @@ export default function ProductDetailsPage() {
                         <span className="text-[80px] font-bold text-gray-900 leading-none z-10 mx-4">
                           {(reviews.reduce((sum, r) => sum + (r.diemSo || 0), 0) / reviews.length).toFixed(1).replace('.', ',')}
                         </span>
-                        <Image
+                        <BackendImage
                           src="/rating1.avif"
                           alt="Guest Favorite Right"
                           height={80}
@@ -1552,7 +1593,7 @@ export default function ProductDetailsPage() {
                       </svg>
                     </div>
                     <div className="w-8 h-8 rounded-full overflow-hidden relative border border-gray-100">
-                      <Image
+                      <BackendImage
                         src={product?.hostInfo?.avatarUrl || "/placeholder-avatar.jpg"}
                         alt="Host"
                         fill
@@ -1572,7 +1613,7 @@ export default function ProductDetailsPage() {
                         {/* Avatar with Badge */}
                         <div className="relative mb-4">
                           <div className="w-28 h-28 rounded-full overflow-hidden relative border-4 border-white shadow-md">
-                            <Image
+                            <BackendImage
                               src={product?.hostInfo?.avatarUrl || "/placeholder-avatar.jpg"}
                               alt={product?.hostInfo?.hoTen || "Host"}
                               fill
@@ -1630,7 +1671,7 @@ export default function ProductDetailsPage() {
                           <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation" focusable="false" style={{ display: 'block', height: '24px', width: '24px', fill: 'currentColor', flexShrink: 0 }}>
                             <path d="M26 4H6a2 2 0 0 0-2 2v20a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zM6 6h20v4H6V6zm0 6v12h20V12H6zm2 2h16v2H8v-2zm0 4h12v2H8v-2z"></path>
                           </svg>
-                          <span className="text-base text-gray-800">Công việc của tôi: {product.hostInfo.congViec}</span>
+                          <span className="text-base text-gray-800">Công việc của tôi: {product.hostInfo?.congViec}</span>
                         </div>
                       )}
 
@@ -1706,7 +1747,7 @@ export default function ProductDetailsPage() {
                 isOpen={showGallery}
                 onClose={() => setShowGallery(false)}
                 initialCategory={selectedIndex === -1 ? undefined : images[selectedIndex]?.phanLoaiAnh}
-                phongId={getPhongId(product!)}
+                phongId={getPhongId(product)}
                 userId={Number(localStorage.getItem('userId')) || undefined}
                 liked={liked}
                 onLikedChange={setLiked}
