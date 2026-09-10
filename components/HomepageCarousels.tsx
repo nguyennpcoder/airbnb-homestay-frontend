@@ -16,6 +16,7 @@ export default function HomepageCarousels() {
     useEffect(() => {
         const apiBase = process.env.NEXT_PUBLIC_API_URL || '/api';
         const url = `${apiBase}/public/search?loaiPhong=noi_luu_tru`;
+        console.log('[HomepageCarousels] NEXT_PUBLIC_API_URL =', JSON.stringify(process.env.NEXT_PUBLIC_API_URL), '→ fetching', url);
         fetch(url)
             .then(async (r) => {
                 if (!r.ok) {
