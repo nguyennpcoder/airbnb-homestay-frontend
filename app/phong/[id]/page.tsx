@@ -214,20 +214,28 @@ export default function ProductDetailsPage() {
         // Fetch ALL data in parallel — no waterfall
         const uid = Number(localStorage.getItem('userId'));
 
-        const [productRes, reviewsRes, averagesRes, wishlistRes] = await Promise.all([
-          phongAPI.getById(id),
-          reviewsAPI.listByProduct(id, uid).catch(err => {
-            console.error('Error fetching reviews:', err);
-            return [];
-          }),
-          reviewsAPI.getCategoryAverages(id).catch(err => {
-            console.error('Error fetching averages:', err);
-            return null;
-          }),
-          uid ? wishlistAPI.list(uid).catch(() => []) : Promise.resolve([])
-        ]);
+        // Start the secondary requests immediately, but do not block the page
+        // on them: previously the whole detail page (title, hero photo, price)
+        // waited for reviews and wishlist, adding ~1s before anything painted.
+        const reviewsPromise = reviewsAPI.listByProduct(id, uid).catch(err => {
+          console.error('Error fetching reviews:', err);
+          return [];
+        });
+        const averagesPromise = reviewsAPI.getCategoryAverages(id).catch(err => {
+          console.error('Error fetching averages:', err);
+          return null;
+        });
+        const wishlistPromise = uid ? wishlistAPI.list(uid).catch(() => []) : Promise.resolve([]);
 
+        const productRes = await phongAPI.getById(id);
         setProduct(productRes);
+        setLoading(false);
+
+        const [reviewsRes, averagesRes, wishlistRes] = await Promise.all([
+          reviewsPromise,
+          averagesPromise,
+          wishlistPromise
+        ]);
 
         if (Array.isArray(reviewsRes)) {
           setReviews(reviewsRes);
