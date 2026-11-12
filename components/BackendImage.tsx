@@ -22,6 +22,7 @@ export default function BackendImage({
   height,
   style,
   onError,
+  priority = false,
   ...props
 }: {
   src: unknown;
@@ -34,6 +35,8 @@ export default function BackendImage({
   height?: number;
   style?: React.CSSProperties;
   onError?: React.ReactEventHandler<HTMLImageElement>;
+  /** Load immediately (hero / above-the-fold images). */
+  priority?: boolean;
   [key: string]: any;
 }) {
   // 0: Supabase Storage, 1: backend cũ (Render), 2: placeholder
@@ -73,7 +76,8 @@ export default function BackendImage({
         alt={alt}
         className={className}
         sizes={sizes}
-        loading="lazy"
+        loading={priority ? 'eager' : 'lazy'}
+        fetchPriority={priority ? 'high' : undefined}
         decoding="async"
         onError={handleError}
         style={{
@@ -98,7 +102,8 @@ export default function BackendImage({
       height={height}
       className={className}
       sizes={sizes}
-      loading="lazy"
+      loading={priority ? 'eager' : 'lazy'}
+      fetchPriority={priority ? 'high' : undefined}
       decoding="async"
       onError={handleError}
       style={style}
