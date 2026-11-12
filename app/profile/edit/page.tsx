@@ -41,7 +41,10 @@ export default function EditProfilePage() {
 
   useEffect(() => {
     const id = localStorage.getItem('userId');
-    if (!id) return;
+    if (!id) {
+      window.location.href = `/login?callbackUrl=${encodeURIComponent('/profile/edit')}`;
+      return;
+    }
     userAPI.getProfile(Number(id)).then((data) => {
       setProfile(data);
       setForm({

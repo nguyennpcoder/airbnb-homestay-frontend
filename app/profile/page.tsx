@@ -48,16 +48,20 @@ function ProfileContent() {
 
   const fetchProfile = async () => {
     const userId = localStorage.getItem('userId');
-    if (userId) {
-      try {
-        const data = await userAPI.getProfile(Number(userId));
-        setProfile(data);
-      } catch (err) {
-        console.error('Error fetching profile:', err);
-      } finally {
-        setLoading(false);
-      }
-    } else {
+    if (!userId) {
+      // Auth sống trong localStorage (token + userId), không phải cookie.
+      // Middleware server không đọc được localStorage nên phải guard ở client.
+      const callbackUrl = window.location.pathname + window.location.search;
+      router.replace(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+      return;
+    }
+
+    try {
+      const data = await userAPI.getProfile(Number(userId));
+      setProfile(data);
+    } catch (err) {
+      console.error('Error fetching profile:', err);
+    } finally {
       setLoading(false);
     }
   };
