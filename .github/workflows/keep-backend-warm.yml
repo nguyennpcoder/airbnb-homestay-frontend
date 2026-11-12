@@ -1,0 +1,24 @@
+name: Keep backend warm
+
+# Render's free tier sleeps after ~15 minutes without traffic, and a cold
+# start takes 50-60s. Pinging every 10 minutes keeps the API responsive for
+# the first visitor (GitHub may delay scheduled runs by a few minutes).
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ping health endpoint
+        run: |
+          curl -fsS --max-time 90 --retry 2 --retry-delay 10 \
+            https://airbnb-homestay-9ga1.onrender.com/healthz
+
+      - name: Warm public listing query
+        run: |
+          curl -fsS --max-time 90 -o /dev/null \
+            'https://airbnb-homestay-9ga1.onrender.com/api/public/search?loaiPhong=noi_luu_tru&imageLimit=4'

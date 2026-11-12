@@ -69,6 +69,8 @@ interface PropertyCardComponentProps {
   className?: string;
   compact?: boolean;
   searchParams?: Record<string, string>;
+  /** Load the card photo eagerly (first cards of the above-the-fold row). */
+  priority?: boolean;
 }
 
 const HostAvatar = ({ hostData }: { hostData: NonNullable<PropertyCardData['hostInfo']> }) => {
@@ -114,7 +116,8 @@ function PropertyCardComponent({
   showHostAvatar = true,
   className = '',
   compact = false,
-  searchParams = {}
+  searchParams = {},
+  priority = false
 }: PropertyCardComponentProps) {
   const [isSaved, setIsSaved] = useState(false);
   const [heartPulse, setHeartPulse] = useState(false);
@@ -214,7 +217,8 @@ function PropertyCardComponent({
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                loading="lazy"
+                loading={priority ? 'eager' : 'lazy'}
+                fetchPriority={priority ? 'high' : undefined}
                 decoding="async"
               />
             </div>

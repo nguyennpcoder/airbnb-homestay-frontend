@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { phongAPI, Phong, getPhongId } from '@/lib/api';
 import ListingCard from './ListingCard';
@@ -28,6 +28,8 @@ interface ListingCarouselProps {
   showMore?: boolean;
   /** Pre-fetched rooms. When provided the carousel skips its own API call. */
   initialItems?: Phong[];
+  /** Load the first cards eagerly (use only for the above-the-fold carousel). */
+  priority?: boolean;
 }
 
 // ListingItem is now standardized as SanPham from @/lib/api
@@ -40,21 +42,31 @@ export default function ListingCarousel({
   isOriginal = false,
   showMore = false,
   initialItems,
+  priority = false,
 }: ListingCarouselProps) {
   const router = useRouter();
-  const [items, setItems] = useState<Phong[]>([]);
-  const [loading, setLoading] = useState(true);
+
+  // Resolve initialItems during render so server-rendered HTML already
+  // contains the cards (previously this only happened in useEffect, which
+  // meant every visitor saw skeletons until hydration finished).
+  const seededItems = useMemo<Phong[] | null>(() => {
+    if (initialItems === undefined) return null;
+    let filteredData = initialItems;
+    if (isOriginal) {
+      filteredData = filteredData.filter((item) => item.laOriginal === true);
+    }
+    return filteredData.slice(0, 12);
+  }, [initialItems, isOriginal]);
+
+  const [items, setItems] = useState<Phong[]>(seededItems ?? []);
+  const [loading, setLoading] = useState(seededItems === null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
   useEffect(() => {
-    if (initialItems !== undefined) {
-      let filteredData = initialItems;
-      if (isOriginal) {
-        filteredData = filteredData.filter((item) => item.laOriginal === true);
-      }
-      setItems(filteredData.slice(0, 12));
+    if (seededItems !== null) {
+      setItems(seededItems);
       setLoading(false);
       return;
     }
@@ -82,7 +94,7 @@ export default function ListingCarousel({
     };
 
     fetchItems();
-  }, [itemType, city, isOriginal, initialItems]);
+  }, [itemType, city, isOriginal, seededItems]);
 
   useEffect(() => {
     const el = scrollContainerRef.current;
@@ -206,7 +218,7 @@ export default function ListingCarousel({
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {items.length > 0 ? (
-            items.map((item) => (
+            items.map((item, index) => (
               <div key={getPhongId(item)} className="snap-start">
                 <ListingCard
                   item={{
@@ -218,6 +230,7 @@ export default function ListingCarousel({
                     } : undefined)
                   }}
                   showHostAvatar={false}
+                  priority={priority && index < 4}
                 />
               </div>
             ))
