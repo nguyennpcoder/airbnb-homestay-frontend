@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import BackendImage from './BackendImage';
+import { getValidSrc } from '@/lib/image';
 
 interface HinhAnh {
   maHinhAnh: number;
@@ -163,10 +164,7 @@ export default function PhotoGalleryLightbox({
   if (!isOpen) return null;
 
   const getImageUrl = (url: string) => {
-    if (!url) return '';
-    if (url.startsWith('http')) return url;
-    if (url.startsWith('/uploads')) return url;
-    return url;
+    return getValidSrc(url, '');
   };
 
   // --- Single Image Viewer Logic ---

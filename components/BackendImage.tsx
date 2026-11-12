@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getValidSrc } from '@/lib/image';
+import { getBackendUploadsSrc, getValidSrc } from '@/lib/image';
 
 /**
  * Renders backend-hosted images as plain <img> to bypass
@@ -36,18 +36,33 @@ export default function BackendImage({
   onError?: React.ReactEventHandler<HTMLImageElement>;
   [key: string]: any;
 }) {
-  const [failed, setFailed] = useState(false);
+  // 0: Supabase Storage, 1: backend cũ (Render), 2: placeholder
+  const [failedStage, setFailedStage] = useState<0 | 1 | 2>(0);
 
   // A card can swap photos without remounting, so clear the error state
   // whenever the requested image changes.
   useEffect(() => {
-    setFailed(false);
+    setFailedStage(0);
   }, [src]);
 
-  const resolvedSrc = failed ? fallback : getValidSrc(src, fallback);
+  const primarySrc = getValidSrc(src, fallback);
+  const backendSrc = getBackendUploadsSrc(src);
+  const resolvedSrc =
+    failedStage === 2 || !primarySrc
+      ? fallback
+      : failedStage === 1 && backendSrc && backendSrc !== primarySrc
+        ? backendSrc
+        : primarySrc;
 
   const handleError: React.ReactEventHandler<HTMLImageElement> = (event) => {
-    setFailed(true);
+    // Ảnh mới upload chưa kịp có trên Supabase: thử backend cũ trước khi bỏ cuộc.
+    if (failedStage === 0 && backendSrc && backendSrc !== primarySrc) {
+      setFailedStage(1);
+      return;
+    }
+    if (failedStage !== 2) {
+      setFailedStage(2);
+    }
     if (onError) onError(event);
   };
 

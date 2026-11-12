@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 
 const backendUrl = process.env.BACKEND_URL || 'http://localhost:8089';
+const supabaseUploadsUrl =
+  process.env.NEXT_PUBLIC_SUPABASE_UPLOADS_URL ||
+  'https://ksjzpphvbpkayfmarpeb.supabase.co/storage/v1/object/public/uploads';
 
 if (process.env.NODE_ENV === 'production') {
   if (!process.env.BACKEND_URL) {
@@ -79,7 +82,7 @@ const nextConfig = {
       },
       {
         source: '/uploads/:path*',
-        destination: `${backendUrl}/uploads/:path*`,
+        destination: `${supabaseUploadsUrl.replace(/\/$/, '')}/:path*`,
       },
     ];
   },

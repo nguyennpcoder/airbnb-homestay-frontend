@@ -54,6 +54,7 @@ const FiHeartOff = ({ className }: { className?: string }) => (
 );
 
 import Pagination from './Pagination';
+import { getValidSrc } from '@/lib/image';
 
 export default function FavoritesList({ favorites: initialFavorites, onRemove }: FavoritesListProps) {
   const [favorites, setFavorites] = useState(initialFavorites);
@@ -81,10 +82,7 @@ export default function FavoritesList({ favorites: initialFavorites, onRemove }:
   };
 
   const getImageUrl = (url: string) => {
-    if (!url) return '/placeholder-image.jpg';
-    if (url.startsWith('http')) return url;
-    if (url.startsWith('/uploads')) return url;
-    return url;
+    return getValidSrc(url, '/placeholder-image.jpg');
   };
 
   const getItemId = (item: FavoriteItem) => item.maPhong ?? item.maSanPham!;
