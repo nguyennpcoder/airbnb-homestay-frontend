@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { getValidSrc } from '@/lib/image';
 
 /**
@@ -20,6 +21,7 @@ export default function BackendImage({
   width,
   height,
   style,
+  onError,
   ...props
 }: {
   src: unknown;
@@ -31,9 +33,23 @@ export default function BackendImage({
   width?: number;
   height?: number;
   style?: React.CSSProperties;
+  onError?: React.ReactEventHandler<HTMLImageElement>;
   [key: string]: any;
 }) {
-  const resolvedSrc = getValidSrc(src, fallback);
+  const [failed, setFailed] = useState(false);
+
+  // A card can swap photos without remounting, so clear the error state
+  // whenever the requested image changes.
+  useEffect(() => {
+    setFailed(false);
+  }, [src]);
+
+  const resolvedSrc = failed ? fallback : getValidSrc(src, fallback);
+
+  const handleError: React.ReactEventHandler<HTMLImageElement> = (event) => {
+    setFailed(true);
+    if (onError) onError(event);
+  };
 
   if (fill) {
     return (
@@ -42,6 +58,9 @@ export default function BackendImage({
         alt={alt}
         className={className}
         sizes={sizes}
+        loading="lazy"
+        decoding="async"
+        onError={handleError}
         style={{
           position: 'absolute',
           top: 0,
@@ -64,6 +83,9 @@ export default function BackendImage({
       height={height}
       className={className}
       sizes={sizes}
+      loading="lazy"
+      decoding="async"
+      onError={handleError}
       style={style}
       {...props}
     />

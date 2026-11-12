@@ -14,13 +14,19 @@ const DEFAULT_CITIES = [
 
 const EMPTY_ROOMS: Phong[] = [];
 
+// Cache the homepage payload for the lifetime of the tab. Navigating away and
+// back (or clicking a logo) would otherwise refetch all 35 rooms every time.
+let homepageCache: Record<string, Phong[]> | null = null;
+
 export default function HomepageCarousels() {
     // One request feeds every carousel. Before this, the page fired 8 search
     // requests (4 fixed cities + 1 per extra city) against a free Render
     // instance, so the requests queued and the page took ~20s to settle.
-    const [roomsByCity, setRoomsByCity] = useState<Record<string, Phong[]> | null>(null);
+    const [roomsByCity, setRoomsByCity] = useState<Record<string, Phong[]> | null>(homepageCache);
 
     useEffect(() => {
+        if (homepageCache) return;
+
         const rawApi = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BACKEND_URL || '/api';
         const apiBase = rawApi.replace(/\/+$/, '').replace(/\/api$/, '') + '/api';
         const url = `${apiBase}/public/search?loaiPhong=noi_luu_tru&imageLimit=4`;
@@ -45,6 +51,7 @@ export default function HomepageCarousels() {
                     if (!grouped[city]) grouped[city] = [];
                     grouped[city].push(room);
                 });
+                homepageCache = grouped;
                 setRoomsByCity(grouped);
             })
             .catch((err) => {
