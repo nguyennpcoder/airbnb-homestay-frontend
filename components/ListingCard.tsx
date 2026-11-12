@@ -203,24 +203,20 @@ function PropertyCardComponent({
         {/* Image Gallery Container */}
         <div className="relative w-full h-full overflow-hidden">
           {imageGallery.length > 0 ? (
-            <div
-              className="flex h-full transition-transform duration-300 ease-in-out"
-              style={{
-                transform: `translateX(-${currentImageIdx * 100}%)`,
-                willChange: 'transform'
-              }}
-            >
-              {imageGallery.map((imgUrl, imgPosition) => (
-                <div key={imgPosition} className="relative w-full h-full flex-shrink-0">
-                  <BackendImage
-                    src={processImageUrl(imgUrl)}
-                    alt={`${item.tieuDe} - Ảnh ${imgPosition + 1}`}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                  />
-                </div>
-              ))}
+            <div className="relative w-full h-full">
+              {/* Only render the active photo. Rendering the whole gallery put
+                  30-100 <img> tags in every card (hundreds of requests to the
+                  backend on the homepage). */}
+              <BackendImage
+                key={imageGallery[currentImageIdx]}
+                src={processImageUrl(imageGallery[currentImageIdx])}
+                alt={`${item.tieuDe} - Ảnh ${currentImageIdx + 1}`}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                loading="lazy"
+                decoding="async"
+              />
             </div>
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
