@@ -26,6 +26,8 @@ interface ListingCarouselProps {
   city?: string;
   isOriginal?: boolean;
   showMore?: boolean;
+  /** Pre-fetched rooms. When provided the carousel skips its own API call. */
+  initialItems?: Phong[];
 }
 
 // ListingItem is now standardized as SanPham from @/lib/api
@@ -37,6 +39,7 @@ export default function ListingCarousel({
   city,
   isOriginal = false,
   showMore = false,
+  initialItems,
 }: ListingCarouselProps) {
   const router = useRouter();
   const [items, setItems] = useState<Phong[]>([]);
@@ -46,6 +49,16 @@ export default function ListingCarousel({
   const [canScrollRight, setCanScrollRight] = useState(false);
 
   useEffect(() => {
+    if (initialItems !== undefined) {
+      let filteredData = initialItems;
+      if (isOriginal) {
+        filteredData = filteredData.filter((item) => item.laOriginal === true);
+      }
+      setItems(filteredData.slice(0, 12));
+      setLoading(false);
+      return;
+    }
+
     const fetchItems = async () => {
       try {
         setLoading(true);
@@ -69,7 +82,7 @@ export default function ListingCarousel({
     };
 
     fetchItems();
-  }, [itemType, city, isOriginal]);
+  }, [itemType, city, isOriginal, initialItems]);
 
   useEffect(() => {
     const el = scrollContainerRef.current;
