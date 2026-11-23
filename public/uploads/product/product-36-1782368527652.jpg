@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sơ đồ nghiệp vụ homestay</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #f2f2f2;
+      color: #111;
+      font-family: "Times New Roman", serif;
+    }
+    .page {
+      width: 1280px;
+      min-height: 760px;
+      margin: 28px auto;
+      padding: 28px 32px 34px;
+      background: #fff;
+      border: 1px solid #ddd;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
+      page-break-after: always;
+    }
+    .page.wide {
+      width: 1800px;
+      min-height: 1120px;
+    }
+    h1 {
+      margin: 0;
+      text-align: center;
+      font-size: 34px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    h2 {
+      margin: 8px 0 22px;
+      text-align: center;
+      font-size: 28px;
+      font-weight: 700;
+    }
+    svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #fff;
+    }
+    .shape {
+      fill: #fff;
+      stroke: #111;
+      stroke-width: 2.2;
+    }
+    .shape-soft {
+      fill: #fbfbfb;
+      stroke: #111;
+      stroke-width: 2.2;
+    }
+    .line {
+      stroke: #111;
+      stroke-width: 2.2;
+      fill: none;
+    }
+    .dash {
+      stroke: #999;
+      stroke-width: 1;
+      stroke-dasharray: 5 5;
+      fill: none;
+    }
+    .label {
+      font-size: 22px;
+      font-weight: 700;
+      text-anchor: middle;
+      dominant-baseline: middle;
+    }
+    .small-label {
+      font-size: 18px;
+      font-weight: 700;
+      text-anchor: middle;
+      dominant-baseline: middle;
+    }
+    .caption-note {
+      font-size: 18px;
+      font-style: italic;
+      fill: #222;
+      text-anchor: middle;
+    }
+    .actor-line {
+      stroke: #111;
+      stroke-width: 4;
+      fill: none;
+      stroke-linecap: round;
+    }
+    @media print {
+      body { background: #fff; }
+      .page {
+        margin: 0;
+        border: 0;
+        box-shadow: none;
+        page-break-after: always;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="pages"></div>
+
+  <script>
+    const NS = "http://www.w3.org/2000/svg";
+    const pages = document.getElementById("pages");
+
+    function el(name, attrs = {}, parent) {
+      const node = document.createElementNS(NS, name);
+      for (const [key, value] of Object.entries(attrs)) node.setAttribute(key, value);
+      if (parent) parent.appendChild(node);
+      return node;
+    }
+
+    function textLines(svg, text, x, y, width, className = "label", lineHeight = 26, rotate = 0) {
+      const words = text.split(" ");
+      const lines = [];
+      let current = "";
+      const maxChars = Math.max(8, Math.floor(width / 11));
+      for (const word of words) {
+        const test = current ? current + " " + word : word;
+        if (test.length > maxChars && current) {
+          lines.push(current);
+          current = word;
+        } else {
+          current = test;
+        }
+      }
+      if (current) lines.push(current);
+      const group = el("text", { x, y, class: className }, svg);
+      if (rotate) group.setAttribute("transform", `rotate(${rotate} ${x} ${y})`);
+      const start = y - ((lines.length - 1) * lineHeight) / 2;
+      lines.forEach((line, index) => {
+        const span = el("tspan", { x, y: start + index * lineHeight }, group);
+        span.textContent = line;
+      });
+      return group;
+    }
+
+    function arrow(svg, d) {
+      el("path", { d, class: "line", markerEnd: "url(#arrow)" }, svg);
+    }
+
+    function line(svg, d, className = "line") {
+      el("path", { d, class: className }, svg);
+    }
+
+    function rect(svg, x, y, w, h, text, cls = "shape", fontClass = "label") {
+      el("rect", { x, y, width: w, height: h, class: cls }, svg);
+      textLines(svg, text, x + w / 2, y + h / 2, w - 14, fontClass);
+    }
+
+    function diamond(svg, cx, cy, w, h, text) {
+      const points = `${cx},${cy - h / 2} ${cx + w / 2},${cy} ${cx},${cy + h / 2} ${cx - w / 2},${cy}`;
+      el("polygon", { points, class: "shape" }, svg);
+      textLines(svg, text, cx, cy, w - 18, "label");
+    }
+
+    function ellipse(svg, cx, cy, rx, ry, text, stroke = "#111") {
+      el("ellipse", { cx, cy, rx, ry, fill: "#fff", stroke, "stroke-width": 2.2 }, svg);
+      textLines(svg, text, cx, cy, rx * 1.55, "small-label", 22);
+    }
+
+    function addArrowDef(svg) {
+      const defs = el("defs", {}, svg);
+      const marker = el("marker", {
+        id: "arrow",
+        markerWidth: 12,
+        markerHeight: 12,
+        refX: 10,
+        refY: 6,
+        orient: "auto",
+        markerUnits: "strokeWidth"
+      }, defs);
+      el("path", { d: "M2,2 L10,6 L2,10 Z", fill: "#111" }, marker);
+    }
+
+    function createPage(title, subtitle) {
+      const page = document.createElement("section");
+      page.className = "page";
+      const h1 = document.createElement("h1");
+      h1.textContent = title;
+      const h2 = document.createElement("h2");
+      h2.textContent = subtitle;
+      page.appendChild(h1);
+      page.appendChild(h2);
+      const svg = el("svg", { viewBox: "0 0 1216 610" }, page);
+      addArrowDef(svg);
+      pages.appendChild(page);
+      return svg;
+    }
+
+    function createWidePage(title, subtitle, viewBox = "0 0 1800 1000") {
+      const page = document.createElement("section");
+      page.className = "page wide";
+      const h1 = document.createElement("h1");
+      h1.textContent = title;
+      const h2 = document.createElement("h2");
+      h2.textContent = subtitle;
+      page.appendChild(h1);
+      page.appendChild(h2);
+      const svg = el("svg", { viewBox }, page);
+      addArrowDef(svg);
+      pages.appendChild(page);
+      return svg;
+    }
+
+    function drawProcess(title, subtitle, data) {
+      const svg = createPage(title, subtitle);
+      line(svg, "M610 0 V610", "dash");
+      line(svg, "M0 300 H1216", "dash");
+
+      const w = 160, h = 82;
+      const topY = 28;
+      const bottomY = 342;
+      const x = [36, 268, 500, 732, 964];
+      rect(svg, x[0], topY, w, h, data.actor);
+      rect(svg, x[1], topY, w, h, data.top1);
+      rect(svg, x[2], topY, w, h, data.top2);
+      rect(svg, x[3], topY, w, h, data.top3);
+      rect(svg, x[4], topY, w, h, data.edit);
+      arrow(svg, `M${x[0] + w} ${topY + h / 2} H${x[1] - 8}`);
+      arrow(svg, `M${x[1] + w} ${topY + h / 2} H${x[2] - 8}`);
+      arrow(svg, `M${x[2] + w} ${topY + h / 2} H${x[3] - 8}`);
+      arrow(svg, `M${x[3] + w} ${topY + h / 2} H${x[4] - 8}`);
+
+      rect(svg, x[4], bottomY, w, h, data.form);
+      rect(svg, x[3], bottomY, w, h, data.change);
+      rect(svg, x[2], bottomY, w, h, data.save);
+      diamond(svg, x[1] + 80, bottomY + 41, 130, 130, data.check);
+      rect(svg, 28, bottomY, 178, h, data.success);
+      rect(svg, 930, 494, 224, 72, data.error || "Thông báo lỗi và yêu cầu nhập lại", "shape-soft", "small-label");
+
+      arrow(svg, `M${x[4] + w / 2} ${topY + h} V${bottomY - 8}`);
+      arrow(svg, `M${x[4]} ${bottomY + h / 2} H${x[3] + w + 8}`);
+      arrow(svg, `M${x[3]} ${bottomY + h / 2} H${x[2] + w + 8}`);
+      arrow(svg, `M${x[2]} ${bottomY + h / 2} H${x[1] + 150}`);
+      arrow(svg, `M${x[1] + 15} ${bottomY + h / 2} H214`);
+      arrow(svg, `M${x[1] + 80} ${bottomY + 106} V530 H922`);
+      arrow(svg, `M1042 494 V432`);
+
+      textLines(svg, "Hợp lệ", 235, bottomY + 26, 90, "small-label", 22);
+      textLines(svg, "Không hợp lệ", 425, 516, 130, "small-label", 22);
+      el("text", { x: 608, y: 590, class: "caption-note" }, svg).textContent = data.note || "";
+    }
+
+    const processes = [
+      {
+        title: "Quy trình 1",
+        subtitle: "Sơ đồ quy trình đăng nhập hệ thống",
+        actor: "Người dùng",
+        top1: "Truy cập trang đăng nhập",
+        top2: "Hiển thị form đăng nhập",
+        top3: "Nhập email và mật khẩu",
+        edit: "Nhấn Đăng nhập",
+        form: "Gửi thông tin đăng nhập",
+        change: "Đối chiếu tài khoản và mật khẩu",
+        save: "Tạo JWT và phiên đăng nhập",
+        check: "Kiểm tra thông tin",
+        success: "Thông báo đăng nhập thành công",
+        note: "Nếu tài khoản sai hoặc bị khóa, hệ thống yêu cầu nhập lại."
+      },
+      {
+        title: "Quy trình 2",
+        subtitle: "Sơ đồ quy trình quản lý thông tin cá nhân",
+        actor: "Người dùng",
+        top1: "Truy cập thông tin cá nhân",
+        top2: "Hiển thị thông tin cá nhân",
+        top3: "Nhấn sửa thông tin cá nhân",
+        edit: "Hiển thị các trường thông tin",
+        form: "Thay đổi thông tin cần cập nhật",
+        change: "Nhấn Lưu",
+        save: "Kiểm tra thông tin",
+        check: "Hợp lệ dữ liệu",
+        success: "Thông báo cập nhật thành công",
+        note: "Thông tin không hợp lệ được trả về form để chỉnh sửa."
+      },
+      {
+        title: "Quy trình 3",
+        subtitle: "Sơ đồ quy trình quản lý phòng homestay",
+        actor: "Chủ homestay",
+        top1: "Truy cập quản lý phòng",
+        top2: "Hiển thị danh sách phòng",
+        top3: "Nhấn thêm hoặc sửa phòng",
+        edit: "Hiển thị form phòng homestay",
+        form: "Nhập ảnh, giá, vị trí, tiện nghi, nội quy",
+        change: "Nhấn Lưu phòng",
+        save: "Kiểm tra dữ liệu phòng",
+        check: "Hợp lệ dữ liệu",
+        success: "Lưu phòng và gửi kiểm duyệt",
+        note: "Nếu thiếu thông tin bắt buộc, chủ nhà cần cập nhật lại."
+      },
+      {
+        title: "Quy trình 4",
+        subtitle: "Sơ đồ quy trình đặt phòng homestay",
+        actor: "Khách thuê",
+        top1: "Tìm kiếm phòng homestay",
+        top2: "Xem chi tiết phòng",
+        top3: "Chọn ngày và số khách",
+        edit: "Nhấn đặt phòng",
+        form: "Hệ thống kiểm tra lịch trống",
+        change: "Tạo đơn đặt phòng",
+        save: "Chuyển sang thanh toán",
+        check: "Phòng còn trống",
+        success: "Xác nhận đặt phòng",
+        note: "Nếu phòng đã kín lịch, khách chọn ngày khác hoặc phòng khác."
+      },
+      {
+        title: "Quy trình 5",
+        subtitle: "Sơ đồ quy trình nhận phòng và trả phòng",
+        actor: "Khách thuê",
+        top1: "Đến homestay theo lịch",
+        top2: "Chủ nhà kiểm tra đơn đặt",
+        top3: "Xác nhận nhận phòng",
+        edit: "Cập nhật đang lưu trú",
+        form: "Khách trả phòng",
+        change: "Chủ nhà xác nhận hoàn tất",
+        save: "Mở quyền đánh giá",
+        check: "Đơn hợp lệ",
+        success: "Cập nhật lịch phòng",
+        note: "Nếu thông tin đặt phòng không khớp, chủ nhà kiểm tra lại với khách."
+      },
+      {
+        title: "Quy trình 6",
+        subtitle: "Sơ đồ quy trình quản lý tiện nghi và dịch vụ hỗ trợ",
+        actor: "Chủ homestay",
+        top1: "Truy cập quản lý tiện nghi",
+        top2: "Hiển thị nhóm tiện nghi",
+        top3: "Chọn hoặc thêm tiện nghi",
+        edit: "Nhấn lưu tiện nghi",
+        form: "Gắn tiện nghi vào phòng",
+        change: "Kiểm tra dữ liệu tiện nghi",
+        save: "Lưu tiện nghi phòng",
+        check: "Hợp lệ dữ liệu",
+        success: "Hiển thị ở chi tiết phòng",
+        note: "Tiện nghi không hợp lệ hoặc trùng lặp sẽ được yêu cầu chỉnh sửa."
+      },
+      {
+        title: "Quy trình 7",
+        subtitle: "Sơ đồ quy trình thanh toán và hoàn tiền",
+        actor: "Khách thuê",
+        top1: "Chọn phương thức thanh toán",
+        top2: "Gửi yêu cầu thanh toán",
+        top3: "Cổng thanh toán xử lý",
+        edit: "Trả kết quả giao dịch",
+        form: "Hệ thống ghi nhận payment",
+        change: "Cập nhật đơn đặt phòng",
+        save: "Kiểm tra trạng thái",
+        check: "Thanh toán thành công",
+        success: "Xác nhận và thông báo",
+        note: "Khi hủy đơn, hệ thống kiểm tra chính sách hủy để tính hoàn tiền."
+      },
+      {
+        title: "Quy trình 8",
+        subtitle: "Sơ đồ quy trình đánh giá sau lưu trú",
+        actor: "Khách thuê",
+        top1: "Mở chuyến đi đã hoàn tất",
+        top2: "Hiển thị form đánh giá",
+        top3: "Nhập điểm và bình luận",
+        edit: "Nhấn gửi đánh giá",
+        form: "Kiểm tra quyền đánh giá",
+        change: "Lưu đánh giá",
+        save: "Cập nhật điểm trung bình",
+        check: "Đánh giá hợp lệ",
+        success: "Hiển thị đánh giá",
+        note: "Chỉ khách đã hoàn tất lưu trú mới được đánh giá phòng."
+      },
+      {
+        title: "Quy trình 9",
+        subtitle: "Sơ đồ quy trình thống kê và báo cáo",
+        actor: "Quản trị viên hoặc chủ nhà",
+        top1: "Truy cập báo cáo",
+        top2: "Chọn khoảng thời gian",
+        top3: "Chọn loại thống kê",
+        edit: "Nhấn xem báo cáo",
+        form: "Hệ thống tổng hợp dữ liệu",
+        change: "Tính đặt phòng, doanh thu, đánh giá",
+        save: "Hiển thị biểu đồ và bảng",
+        check: "Có dữ liệu",
+        success: "Xuất báo cáo nếu cần",
+        note: "Nếu không có dữ liệu, hệ thống hiển thị trạng thái trống."
+      }
+    ];
+
+    processes.forEach(item => drawProcess(item.title, item.subtitle, item));
+
+    function drawFunctionTree() {
+      const svg = createWidePage("Hình 2-9", "Sơ đồ chức năng hệ thống đặt phòng homestay", "0 0 1800 980");
+      rect(svg, 650, 24, 500, 70, "HỆ THỐNG ĐẶT PHÒNG HOMESTAY", "shape", "label");
+      line(svg, "M900 94 V134");
+      line(svg, "M75 134 H1725");
+
+      const groups = [
+        ["Xác thực & tài khoản", 35, ["Đăng ký / đăng nhập", "OTP, xác thực email", "Đăng nhập Firebase", "Quên / đổi mật khẩu", "Cam kết cộng đồng", "Hồ sơ, ảnh đại diện"]],
+        ["Tìm kiếm & xem homestay", 225, ["Danh sách nơi lưu trú", "Tìm kiếm, bộ lọc", "Bản đồ, vị trí", "Chi tiết phòng, ảnh", "Đánh giá, điểm số", "Hồ sơ chủ nhà"]],
+        ["Yêu thích & chuyến đi", 415, ["Thêm / bỏ yêu thích", "Kiểm tra yêu thích", "Danh sách yêu thích", "Xem chuyến đi", "Chi tiết đặt chỗ"]],
+        ["Đặt phòng homestay", 605, ["Kiểm tra lịch trống", "Tạo đặt phòng", "Cập nhật trạng thái", "Hủy đặt phòng", "Xem hoàn tiền dự kiến"]],
+        ["Thanh toán & ví", 795, ["VNPAY", "ZaloPay", "MoMo", "Thanh toán bằng số dư", "Ghi nhận / xác nhận", "Yêu cầu / duyệt hoàn tiền"]],
+        ["Chủ nhà quản lý phòng", 985, ["Bảng điều khiển", "Tạo / sửa / xóa / ẩn", "Quản lý ảnh", "Quản lý tiện nghi", "Lịch, giá, ngày khóa", "Đặt phòng nhận được"]],
+        ["Giao tiếp & thông báo", 1175, ["Nhắn tin theo đặt chỗ", "Upload file", "Đánh dấu đã đọc", "Thông báo", "Yêu cầu chat", "Phản hồi nhanh"]],
+        ["Đội ngũ co-host", 1365, ["Mời co-host", "Xem danh sách co-host", "Xóa co-host", "Hỗ trợ quản lý phòng"]],
+        ["Quản trị hệ thống", 1555, ["Dashboard thống kê", "Người dùng, xác minh", "Phân quyền chủ nhà", "Kiểm duyệt homestay", "Status, flags, batch lock", "Đặt chỗ", "Thanh toán, hoàn tiền", "Cài đặt hệ thống"]]
+      ];
+
+      groups.forEach(([name, x, children]) => {
+        rect(svg, x, 170, 170, 76, name, "shape", "small-label");
+        line(svg, `M${x + 85} 134 V170`);
+        const firstY = 292;
+        const lastY = firstY + (children.length - 1) * 72;
+        line(svg, `M${x + 85} 246 V${firstY}`);
+        line(svg, `M${x + 85} ${firstY} V${lastY}`);
+        children.forEach((child, index) => {
+          const y = firstY + index * 72;
+          rect(svg, x + 5, y - 24, 160, 48, child, "shape-soft", "small-label");
+          line(svg, `M${x + 85} ${y} H${x + 5}`);
+        });
+      });
+    }
+
+    drawFunctionTree();
+
+    function actor(svg, x, y, label) {
+      el("circle", { cx: x, cy: y, r: 22, class: "actor-line" }, svg);
+      line(svg, `M${x} ${y + 22} V${y + 92}`, "actor-line");
+      line(svg, `M${x - 48} ${y + 52} H${x + 48}`, "actor-line");
+      line(svg, `M${x} ${y + 92} L${x - 34} ${y + 150}`, "actor-line");
+      line(svg, `M${x} ${y + 92} L${x + 34} ${y + 150}`, "actor-line");
+      textLines(svg, label, x, y + 185, 160, "label", 26);
+    }
+
+    function assoc(svg, x1, y1, x2, y2) {
+      line(svg, `M${x1} ${y1} L${x2} ${y2}`, "line");
+    }
+
+    function drawUseCase() {
+      const svg = createWidePage("Hình 2-10", "Sơ đồ use-case tổng quát hệ thống homestay", "0 0 1800 1080");
+      el("rect", { x: 255, y: 24, width: 1290, height: 1010, fill: "#79c8e8", stroke: "#111", "stroke-width": 2.5 }, svg);
+      textLines(svg, "Hệ thống đặt phòng homestay", 900, 68, 520, "label", 28);
+
+      actor(svg, 120, 130, "Quản trị viên");
+      actor(svg, 120, 710, "Chủ homestay");
+      actor(svg, 1680, 430, "Khách thuê");
+
+      const adminCases = [
+        [470, 145, "Dashboard thống kê"],
+        [470, 225, "Quản lý người dùng"],
+        [470, 305, "Phân quyền chủ nhà / xác minh"],
+        [470, 385, "Kiểm duyệt homestay"],
+        [470, 465, "Khóa, mở khóa, gắn flags"],
+        [470, 545, "Quản lý đặt chỗ"],
+        [470, 625, "Quản lý thanh toán / hoàn tiền"],
+        [470, 705, "Cài đặt hệ thống"]
+      ];
+      const commonCases = [
+        [760, 145, "Đăng ký / đăng nhập / OTP"],
+        [760, 225, "Quản lý hồ sơ cá nhân"],
+        [760, 305, "Đổi / quên mật khẩu"],
+        [760, 385, "Xem thông báo"],
+        [760, 465, "Nhắn tin / tải tệp"]
+      ];
+      const hostCases = [
+        [1050, 145, "Bảng điều khiển chủ nhà"],
+        [1050, 225, "Quản lý phòng homestay"],
+        [1050, 305, "Quản lý ảnh và tiện nghi"],
+        [1050, 385, "Quản lý lịch, giá, ngày khóa"],
+        [1050, 465, "Quản lý đặt phòng nhận được"],
+        [1050, 545, "Hộp thư và phản hồi nhanh"],
+        [1050, 625, "Quản lý co-host"],
+        [1050, 705, "Xem insights doanh thu"]
+      ];
+      const guestCases = [
+        [1340, 145, "Tìm kiếm / lọc homestay"],
+        [1340, 225, "Xem chi tiết, ảnh, bản đồ"],
+        [1340, 305, "Quản lý yêu thích"],
+        [1340, 385, "Tạo đặt phòng"],
+        [1340, 465, "Thanh toán online / số dư"],
+        [1340, 545, "Hủy đặt / yêu cầu hoàn tiền"],
+        [1340, 625, "Xem chuyến đi"],
+        [1340, 705, "Đánh giá sau lưu trú"]
+      ];
+
+      [...adminCases, ...commonCases, ...hostCases, ...guestCases].forEach(([cx, cy, text]) => ellipse(svg, cx, cy, 150, 32, text, "#111"));
+
+      adminCases.forEach(([cx, cy]) => assoc(svg, 168, 160, cx - 150, cy));
+      commonCases.slice(0, 4).forEach(([cx, cy]) => assoc(svg, 168, 180, cx - 150, cy));
+      hostCases.forEach(([cx, cy]) => assoc(svg, 168, 740, cx - 150, cy));
+      commonCases.forEach(([cx, cy]) => assoc(svg, 168, 760, cx - 150, cy));
+      guestCases.forEach(([cx, cy]) => assoc(svg, 1632, 460, cx + 150, cy));
+      commonCases.forEach(([cx, cy]) => assoc(svg, 1632, 480, cx + 150, cy));
+    }
+
+    drawUseCase();
+  </script>
+</body>
+</html>

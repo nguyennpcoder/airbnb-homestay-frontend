@@ -21,19 +21,15 @@ if (rawApiUrl && /^https?:\/\//.test(rawApiUrl)) {
   resolvedBaseURL = rawApiUrl || '/api';
 }
 
-if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
   console.log(
     '[api.ts] baseURL =', resolvedBaseURL,
     '| raw NEXT_PUBLIC_API_URL =', JSON.stringify(rawApiUrl),
-    '| raw NEXT_PUBLIC_BACKEND_URL =', JSON.stringify(rawBackendUrl),
-    '| NODE_ENV =', process.env.NODE_ENV
+    '| raw NEXT_PUBLIC_BACKEND_URL =', JSON.stringify(rawBackendUrl)
   );
   if (!/^https?:\/\//.test(resolvedBaseURL)) {
     console.error(
-      '[api.ts] ⚠️  baseURL is relative ("%s"). ' +
-      'This means NEXT_PUBLIC_API_URL was NOT set at build time. ' +
-      'API calls will go to the frontend domain and 404. ' +
-      'Fix: set NEXT_PUBLIC_API_URL=https://airbnb-homestay.onrender.com/api on Vercel, then REDEPLOY.',
+      '[api.ts] baseURL is relative ("%s"). Set NEXT_PUBLIC_API_URL to the absolute backend /api URL.',
       resolvedBaseURL
     );
   }

@@ -8,9 +8,8 @@ import { Toaster } from 'react-hot-toast';
 import AdminGuard from "@/components/AdminGuard";
 import PricingRulesInit from "@/components/PricingRulesInit";
 
-// Warm up the image CDN and API TLS connections before React needs them.
-// Supabase serves every uploaded photo; Render serves all API calls.
-const SUPABASE_ORIGIN = 'https://ksjzpphvbpkayfmarpeb.supabase.co';
+// Warm up the API TLS connection before React needs it.
+// Listing photos are same-origin (/uploads → Vercel CDN / public folder).
 const BACKEND_ORIGIN = (() => {
   const raw =
     process.env.NEXT_PUBLIC_API_URL ||
@@ -36,8 +35,6 @@ export default function RootLayout({
   return (
     <html lang="vi" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href={SUPABASE_ORIGIN} />
-        <link rel="dns-prefetch" href={SUPABASE_ORIGIN} />
         <link rel="preconnect" href={BACKEND_ORIGIN} crossOrigin="anonymous" />
         <link rel="dns-prefetch" href={BACKEND_ORIGIN} />
       </head>

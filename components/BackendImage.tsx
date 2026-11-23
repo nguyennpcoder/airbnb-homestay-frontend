@@ -1,15 +1,17 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getBackendUploadsSrc, getValidSrc } from '@/lib/image';
+import { getBackendUploadsSrc, getSupabaseUploadsSrc, getValidSrc } from '@/lib/image';
 
 /**
- * Renders backend-hosted images as plain <img> to bypass
- * next/image's Image optimization pipeline which causes
- * "Failed to construct 'Image'" errors on Vercel.
+ * Plain <img> for listing/avatar photos.
+ * Avoids next/image optimizer issues with AVIF + remote hosts on Vercel.
  *
- * All backend /uploads/ images must use unoptimized anyway,
- * so there is no benefit to using next/image.
+ * Failover chain:
+ *  0 → primary (same-origin /uploads, or configured IMAGE_SOURCE)
+ *  1 → Render backend absolute URL
+ *  2 → Supabase (only if different from primary)
+ *  3 → placeholder
  */
 export default function BackendImage({
   src,
@@ -39,47 +41,61 @@ export default function BackendImage({
   priority?: boolean;
   [key: string]: any;
 }) {
-  // 0: Supabase Storage, 1: backend cũ (Render), 2: placeholder
-  const [failedStage, setFailedStage] = useState<0 | 1 | 2>(0);
+  const [failedStage, setFailedStage] = useState<0 | 1 | 2 | 3>(0);
 
-  // A card can swap photos without remounting, so clear the error state
-  // whenever the requested image changes.
   useEffect(() => {
     setFailedStage(0);
   }, [src]);
 
   const primarySrc = getValidSrc(src, fallback);
   const backendSrc = getBackendUploadsSrc(src);
-  const resolvedSrc =
-    failedStage === 2 || !primarySrc
-      ? fallback
-      : failedStage === 1 && backendSrc && backendSrc !== primarySrc
-        ? backendSrc
-        : primarySrc;
+  const supabaseSrc = getSupabaseUploadsSrc(src);
+
+  const resolvedSrc = (() => {
+    if (failedStage >= 3 || !primarySrc) return fallback || '/placeholder.jpg';
+    if (failedStage === 0) return primarySrc;
+    if (failedStage === 1 && backendSrc && backendSrc !== primarySrc) return backendSrc;
+    if (failedStage === 2 && supabaseSrc && supabaseSrc !== primarySrc && supabaseSrc !== backendSrc) {
+      return supabaseSrc;
+    }
+    return fallback || '/placeholder.jpg';
+  })();
 
   const handleError: React.ReactEventHandler<HTMLImageElement> = (event) => {
-    // Ảnh mới upload chưa kịp có trên Supabase: thử backend cũ trước khi bỏ cuộc.
     if (failedStage === 0 && backendSrc && backendSrc !== primarySrc) {
       setFailedStage(1);
       return;
     }
-    if (failedStage !== 2) {
+    if (
+      failedStage <= 1 &&
+      supabaseSrc &&
+      supabaseSrc !== primarySrc &&
+      supabaseSrc !== backendSrc
+    ) {
       setFailedStage(2);
+      return;
+    }
+    if (failedStage !== 3) {
+      setFailedStage(3);
     }
     if (onError) onError(event);
+  };
+
+  const shared = {
+    src: resolvedSrc,
+    alt,
+    className,
+    sizes,
+    loading: (priority ? 'eager' : 'lazy') as 'eager' | 'lazy',
+    fetchPriority: priority ? ('high' as const) : undefined,
+    decoding: 'async' as const,
+    onError: handleError,
   };
 
   if (fill) {
     return (
       <img
-        src={resolvedSrc}
-        alt={alt}
-        className={className}
-        sizes={sizes}
-        loading={priority ? 'eager' : 'lazy'}
-        fetchPriority={priority ? 'high' : undefined}
-        decoding="async"
-        onError={handleError}
+        {...shared}
         style={{
           position: 'absolute',
           top: 0,
@@ -96,16 +112,9 @@ export default function BackendImage({
 
   return (
     <img
-      src={resolvedSrc}
-      alt={alt}
+      {...shared}
       width={width}
       height={height}
-      className={className}
-      sizes={sizes}
-      loading={priority ? 'eager' : 'lazy'}
-      fetchPriority={priority ? 'high' : undefined}
-      decoding="async"
-      onError={handleError}
       style={style}
       {...props}
     />

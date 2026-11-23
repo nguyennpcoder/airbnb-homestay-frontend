@@ -164,7 +164,8 @@ export default function PhotoGalleryLightbox({
   if (!isOpen) return null;
 
   const getImageUrl = (url: string) => {
-    return getValidSrc(url, '');
+    // Never fall back to empty src — empty <img> paints as a black box.
+    return getValidSrc(url, '/placeholder.jpg');
   };
 
   // --- Single Image Viewer Logic ---
@@ -334,7 +335,7 @@ export default function PhotoGalleryLightbox({
                   className="group flex flex-col items-center gap-2 cursor-pointer min-w-[120px]"
                 >
                   {thumbnail && (
-                    <div className="relative w-32 h-20 rounded-lg overflow-hidden flex-shrink-0 border border-gray-200 group-hover:brightness-95 transition">
+                    <div className="relative w-32 h-20 rounded-lg overflow-hidden flex-shrink-0 border border-gray-200 bg-gray-100 group-hover:brightness-95 transition">
                       <BackendImage
                         src={getImageUrl(thumbnail.urlHinhAnh)}
                         alt={categoryInfo.label}
@@ -398,7 +399,7 @@ export default function PhotoGalleryLightbox({
                           <div
                             key={img.maHinhAnh}
                             onClick={() => handleImageClick(img)}
-                            className={`relative cursor-pointer group overflow-hidden rounded-sm ${isFullWidth ? 'col-span-2 aspect-[16/9]' : 'col-span-1 aspect-[3/2]'}`}
+                            className={`relative cursor-pointer group overflow-hidden rounded-sm bg-gray-100 ${isFullWidth ? 'col-span-2 aspect-[16/9]' : 'col-span-1 aspect-[3/2]'}`}
                           >
                             <BackendImage
                               src={getImageUrl(img.urlHinhAnh)}

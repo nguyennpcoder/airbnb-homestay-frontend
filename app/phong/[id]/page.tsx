@@ -824,10 +824,11 @@ export default function ProductDetailsPage() {
           <div className="mb-8 relative">
             <div className="mb-8 relative -mx-4 md:mx-0">
               {/* Mobile Carousel */}
-              <div className="md:hidden relative w-full h-[300px]">
+              <div className="md:hidden relative w-full h-[300px] bg-gray-100">
                 <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide h-full">
-                  {images.map((img, idx) => (
-                    <div key={img.maHinhAnh} className="snap-center flex-shrink-0 w-full h-full relative border-r border-white/10"
+                  {/* Cap initial mobile carousel requests — full set opens in the lightbox. */}
+                  {images.slice(0, 8).map((img, idx) => (
+                    <div key={img.maHinhAnh} className="snap-center flex-shrink-0 w-full h-full relative border-r border-white/10 bg-gray-100"
                       onClick={() => {
                         setSelectedIndex(idx);
                         setShowGallery(true);
